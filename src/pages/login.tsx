@@ -1,0 +1,53 @@
+import { ReactSVG } from 'react-svg';
+import Input from '../components/input';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import Button from '../components/button';
+import Form from '../components/form';
+import { useNavigate } from "react-router-dom";
+
+function Login() {
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [erro, setErro] = useState("");
+  const navigate = useNavigate();
+
+  const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.currentTarget.value);
+  };
+
+  const handlePassword = (e: ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.currentTarget.value);
+  };
+
+  const authentication = (e: FormEvent) =>{
+    e.preventDefault();
+    navigate("/Dashboard")
+  };
+
+  return (
+    <main className="w-full h-svh bg-9 flex items-center justify-center">
+      <section className='w-[482px] h-[512px] bg-1 rounded-[10px] flex flex-col items-center' >
+        <ReactSVG
+          className="mt-10"
+          src="/src/assets/svg/image 1.svg"
+        />
+        <Form style='flex flex-col w-[90%]' onSubmit={authentication} >
+          <div className='mt-14 w-full gap-5 flex flex-col' >
+            <Input name='E-mail:' value={email} onchange={handleEmail} placeholder='Ex: admin@admin.com' type='email' key="email" />
+            <div className='flex flex-col' >
+              <Input name='Senha:' value={password} onchange={handlePassword} placeholder='' type='password' key="password" />
+              <a className='text-white text-end mr-3 hover:underline' href="">Esqueceu sua senha?</a>
+            </div>
+          </div>
+          <div className='flex w-full justify-end mt-10' >
+          <Button children='Entrar' id='button' type='submit' />
+        </div>
+        </Form>
+      
+      </section>
+    </main>
+  )
+}
+
+export default Login;
