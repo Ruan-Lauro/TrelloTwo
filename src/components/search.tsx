@@ -5,18 +5,20 @@ type search = {
     placeholder: string;
     onClickSearch: ()=> void;
     onchange: (e: ChangeEvent<HTMLInputElement>) => void;
+    typeTwo?: boolean;
 }
 
 export default function Search ({
     placeholder,
     onClickSearch,
-    onchange
+    onchange,
+    typeTwo
 }:search){
     return(
-        <div className="flex items-center bg-2 rounded-full w-full px-5 text-white" >
+        <div className={`flex items-center ${typeTwo?"bg-10":"bg-2 text-white"} rounded-full w-full px-5 `} >
             <input type="search" onChange={onchange} placeholder={placeholder} className="bg-transparent w-full focus:outline-0 h-[60px]" />
             <ReactSVG
-                className="cursor-pointer hover:scale-105 transition-all duration-300"
+                className={`cursor-pointer hover:scale-105 transition-all duration-300 ${typeTwo?"text-[#003B6B]":"text-[#B2C4D3]"}`}
                 src="/src/assets/svg/Search.svg"
                 onClick={onClickSearch}
             />

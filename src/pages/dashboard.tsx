@@ -1,20 +1,17 @@
-import { ChangeEvent, useState } from "react";
-import Header from "../components/header";
+import LayoutPage from "../components/layoutPage";
+import LoadingAnimation from "../components/loading";
 
 
-function Dashboard (){
 
-    const [search, setSearch] = useState("");
-
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.currentTarget.value);
-    };
+function Messages (){
 
     return(
-        <main className="" >
-            <Header functionSearch={handleSearch} name="Dashboard" />
-        </main>
+        <LayoutPage name="Dashboard" loadingValue={false} >
+            <main className="w-full" >
+                {/* <LoadingAnimation/> */}
+            </main>
+        </LayoutPage>
     );
 }
 
-export default Dashboard;
+export default Messages;

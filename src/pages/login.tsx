@@ -1,16 +1,27 @@
 import { ReactSVG } from 'react-svg';
 import Input from '../components/input';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Button from '../components/button';
 import Form from '../components/form';
 import { useNavigate } from "react-router-dom";
+import { useAuthLogin } from '../hooks/useAuthLogin';
+import { useAuthToken } from '../hooks/useAuthToken';
+import { useGetUser } from '../hooks/useGetUser';
+import { useGetCard } from '../hooks/useGetCard';
+
+
 
 function Login() {
-
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
+  const {authenticationLogin} = useAuthLogin();
+  const {editCard} = useGetCard();
+  const {authenticationT} = useAuthToken();
+  const {getUser} = useGetUser();
+
 
   const handleEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.currentTarget.value);
@@ -20,9 +31,37 @@ function Login() {
     setPassword(e.currentTarget.value);
   };
 
-  const authentication = (e: FormEvent) =>{
+  useEffect(()=>{
+    const token = localStorage.getItem("token");
+    if(token && token !== ""){
+      const resToken = authenticationT(token);
+      resToken.then(value=>{
+        // if(value){
+        //   navigate("/Dashboard")
+        // }
+      });
+    }
+  },[])
+
+  const authentication = async (e: FormEvent) =>{
     e.preventDefault();
-    navigate("/Dashboard")
+    const res = await authenticationLogin(email, password);
+    if(res === "login erro"){
+      setErro("Erro nas credenciais");
+    }else{
+      if(res === undefined) return;
+      const resToken = await authenticationT(res);
+      if( resToken && typeof resToken === "boolean"){
+        localStorage.setItem("token", res);
+        const resGetUser = await getUser();
+        if( resGetUser &&typeof resGetUser !== "string" && resGetUser.name){
+          localStorage.setItem("user", JSON.stringify(resGetUser));
+          console.log(resGetUser);
+          navigate("/Dashboard")
+        }
+      }
+    }
+
   };
 
   return (
@@ -43,8 +82,11 @@ function Login() {
           <div className='flex w-full justify-end mt-10' >
           <Button children='Entrar' id='button' type='submit' />
         </div>
+        
         </Form>
-      
+        {erro?(
+          <p className='font-medium text-red-500 text-[20px]' >{erro}</p>
+        ):null}
       </section>
     </main>
   )

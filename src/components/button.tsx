@@ -1,5 +1,5 @@
 
-type button = {
+export type button = {
     children: string;
     authentication?: () => void;
     id?: string;

@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 
-type buttonInput = {
+export type Input = {
     name: string;
     onchange: (e: ChangeEvent<HTMLInputElement>) => void;
     type: string;
@@ -14,7 +14,7 @@ export default function Input({
     onchange,
     placeholder,
     type,
-}:buttonInput){
+}:Input){
     return(
         <div className="flex flex-col w-full text-white" >
             <label htmlFor={name} className="pl-5 mb-1" >{name}</label>
