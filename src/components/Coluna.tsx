@@ -13,7 +13,7 @@ import { useGetCard } from '../hooks/useGetCard';
 interface ColunaProps {
   coluna: ColunaType;
   functionUptade: ()=>void;
-  inforCard: (number:number, show: boolean)=> void;
+  inforCard: (number:number, show: boolean, nameColumn:string, status?:number)=> void;
 }
 
 export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCard }) => {
@@ -117,7 +117,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
           strategy={verticalListSortingStrategy}
         >
           {sortedCards.map((card) => (
-            <Card key={card.id} card={card}  onClick={()=>{inforCard(card.id, true)}}/>
+            <Card key={card.id} card={card}  onClick={()=>{inforCard(card.id, true, coluna.nome,)}}/>
           ))}
         </SortableContext>
 

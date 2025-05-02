@@ -6,13 +6,16 @@ import ButtonAnimationMore from "./buttonAnimationMore";
 import ImgUser from "./imgUser";
 import Tags from "./tags";
 import AddTags from "./addTags";
-import { useRef } from "react";
-import { Calendar, Clock } from "lucide-react"; 
+import { Check } from "lucide-react"; 
 import { BsCheck, BsX } from "react-icons/bs";
 import { CiPen } from "react-icons/ci";
 import { FaRegTrashAlt } from "react-icons/fa";
 import React from "react";
-import { IoImageOutline } from "react-icons/io5";
+import AddAnex from "./addAnex";
+import Status from "./status";
+import CheckList from "./checkList";
+import DateTime from "./dateTime";
+import CommentCard from "./comment";
 
 export type Membro = {
     id: number;
@@ -25,7 +28,7 @@ export type Check = {
     concluido: boolean;
     descricao: string;
     dataHora: string; 
-    membersList: Membro[];
+    memberslist: Membro[];
 };
   
 export type Comentario = {
@@ -50,7 +53,7 @@ export type CardGetId = {
     descricao: string;
     dataHora: string; 
     membersList: Membro[];
-    checkList: Check[];
+    checklist: Check[];
     comentarios: Comentario[];
     tags: Tag[];
     anexos: string[];
@@ -58,20 +61,28 @@ export type CardGetId = {
 
 export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameColumn: string, closeCard: ()=>void}) {
 
-    const {getCardId, addComentCard, addAnexCard, editCard, deleteCard} = useGetCard();
+    //hook Card
+    const {getCardId, editCard, deleteCard} = useGetCard();
+
+    //value card
     const [card, setCard] = useState<CardGetId>();
+
+    //edit Time Card
     const [dateCard, setDateCard] = useState<string>();
     const [timeCard, setTimeCard] = useState<string>();
     const [trueEditCard, setTrueEditCard] = useState(false);
+
+    //List Card
     const [showListUsers, setShowListUsers] = useState(false);
     const [showListTags, setShowListTags] = useState(false);
-    const [update, setUpdate] = useState(false);
+
+    //Edit Card infor
     const [description, setDescription] = useState("");
     const [editCardInfor, setEditCardInfor] = useState(false);
     const [nameCard, setNameCard] = useState("");
 
-    const inputRef = useRef<HTMLInputElement>(null);
-    const inputRefH = useRef<HTMLInputElement & { showPicker?: () => void }>(null);
+    //update useEffect
+    const [update, setUpdate] = useState(false);
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDateCard(e.target.value);
@@ -89,13 +100,6 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
         setNameCard(e.target.value);
     };
 
-    const openCalendar = () => {
-      inputRef.current?.showPicker?.();
-    };
-
-    const openTimePicker = () => {
-        inputRefH.current?.showPicker?.();
-    };
 
     useEffect(()=>{
         if(id){
@@ -108,12 +112,13 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                     setTimeCard(res.time);
                     setDescription(value.descricao);
                     setNameCard(value.titulo);
+                    console.log(value.checklist)
                 }
             })
         }   
     },[update]);
 
-    const transfDateTime = (date: string) => {
+     const transfDateTime = (date: string) => {
         const fullDate = new Date(date);
         const formattedDate = fullDate.toLocaleDateString("sv-SE"); 
         const formattedTime = fullDate.toLocaleTimeString("pt-BR", {
@@ -189,9 +194,9 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
     return(
         <section className="fixed top-0 left-0 w-screen h-screen bg-black/50 z-[1000] flex justify-center custom-scroll-Two " >
             {card?(
-                <div className="w-[879px] h-[1251px] relative bg-[#00447B]/70 rounded-[40px] mt-5 backdrop-blur pl-10 pr-32 max-h-[95vh]" >
+                <div className="w-[879px] h-[1251px] relative bg-[#00447B]/70 rounded-[40px] mt-5 backdrop-blur pl-10 pr-10 max-h-[95vh]" >
                     {editCardInfor?(
-                        <div className="text-white items-center flex pt-12 gap-2 " >
+                        <div className="text-white items-center flex pt-12 pb-3 gap-2 " >
                             <input type="text" value={nameCard} className=" max-w-[200px] bg-transparent border-b-white border-b-[2px] text-[32px] font-bold mt-[-10px] focus:outline-0" onChange={handleNameCard} />
                             <BsCheck className="text-[40px] cursor-pointer hover:text-8" onClick={()=>{
                                 editNameCardNew();
@@ -200,12 +205,17 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                                 setEditCardInfor(false);
                             }}/>
                             <FaRegTrashAlt className="text-[20px] cursor-pointer hover:text-red-500" onClick={()=>{
-
+                                const res = deleteCard(card.id);
+                                res.then(val=>{
+                                    if(typeof val === "boolean" && val){
+                                        closeCard();
+                                    }
+                                })
                             }} />
                         </div>
                     ):(
-                        <div className="text-white flex pt-12 gap-5 " >
-                            <div className="w-[27px] h-[27px] border-white border-[2px] rounded-full bg-transparent" ></div>
+                        <div className="text-white flex pt-12 gap-5 pb-3 " >
+                            <Status card={card} />
                             <div className="flex flex-col" >
                                 <p className="text-[32px] font-bold mt-[-10px] max-w-[200px] truncate" >{nameCard}</p>
                                 <p >em {nameColumn}</p>
@@ -216,115 +226,79 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                         </div>
                         )}
                     <div onClick={closeCard} className="absolute top-7 right-7 flex items-center justify-center w-[43px] h-[43px] rounded-full bg-white font-bold text-black text-[32px] cursor-pointer hover:text-4" ><p >X</p></div>
-                    <div className="flex text-white mt-7 gap-20" >
-                        <div className="flex flex-col" >
-                            <p>Membros</p>
-                            <div className="flex gap-5 mt-1" >
-                                {card.membersList.length > 0?(
-                                    <div className="flex gap-2" >
-                                        {card.membersList.slice(0, 2).map(val=>(
-                                            <ImgUser id={val.id} img={val.foto} nome={val.nome} color="bg-4"/>
-                                        ))}
+                    <div className="flex flex-col h-[85%] overflow-y-auto pr-2" >
+                        <div className="flex text-white mt-7 gap-20" >
+                            <div className="flex flex-col" >
+                                <p>Membros</p>
+                                <div className="flex gap-5 mt-1" >
+                                    {card.membersList.length > 0?(
+                                        <div className="flex gap-2" >
+                                            {card.membersList.slice(0, 2).map(val=>(
+                                                <ImgUser id={val.id} img={val.foto} nome={val.nome} color="bg-4"/>
+                                            ))}
+                                            <ButtonAnimationMore onClick={()=>{setShowListUsers(!showListUsers)}} value={showListUsers} />
+                                        </div>
+                                    ):(
                                         <ButtonAnimationMore onClick={()=>{setShowListUsers(!showListUsers)}} value={showListUsers} />
-                                    </div>
-                                ):(
-                                    <ButtonAnimationMore onClick={()=>{setShowListUsers(!showListUsers)}} value={showListUsers} />
-                                )}
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex flex-col " >
-                            <p>Tags</p>
-                            <div className="flex gap-5 mt-1 " >
-                                {card.tags.length > 0?(
-                                    <div className="flex gap-2 flex-wrap w-[195px]" >
-                                        {card.tags.slice(0, 3).map(val=>(
-                                            <Tags color={val.cor} name={val.titulo} />
-                                        ))}
+                            <div className="flex flex-col " >
+                                <p>Tags</p>
+                                <div className="flex gap-5 mt-1 " >
+                                    {card.tags.length > 0?(
+                                        <div className="flex gap-2 flex-wrap w-[195px]" >
+                                            {card.tags.slice(0, 3).map(val=>(
+                                                <Tags color={val.cor} name={val.titulo} />
+                                            ))}
+                                            <ButtonAnimationMore type="tag" onClick={()=>{setShowListTags(!showListTags)}} value={showListTags} />
+                                        </div>
+                                    ):(
                                         <ButtonAnimationMore type="tag" onClick={()=>{setShowListTags(!showListTags)}} value={showListTags} />
-                                    </div>
-                                ):(
-                                    <ButtonAnimationMore type="tag" onClick={()=>{setShowListTags(!showListTags)}} value={showListTags} />
-                                )}
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                        <div className="flex flex-col" >
-                            <p className="mb-3" >Data de Entrega</p>
-                            <div className="flex gap-3" >
-                                <div className="cursor-pointer relative flex items-center pl-2 w-[149px] h-[31px] rounded-[5px] bg-white/80 text-black hover:bg-white">
-                                    <Calendar
-                                        className="cursor-pointer mr-2 hover:text-1"
-                                        size={16}
-                                        onClick={openCalendar}
-                                    />
-                                    <input
-                                        ref={inputRef}
-                                        type="date"
-                                        className="w-[95px] rounded-md focus:outline-none cursor-pointer"
-                                        onChange={handleDateChange}
-                                        value={dateCard}
-                                    />
-                                </div>
-                                <div className="cursor-pointer relative flex items-center pl-2 w-[96px] gap-3 h-[31px] rounded-[5px] bg-white/80 text-black hover:bg-white">
-                                    <Clock
-                                        className="cursor-pointer hover:text-1"
-                                        size={16}
-                                        onClick={openTimePicker}
-                                    />
-                                    <input
-                                        ref={inputRefH}
-                                        type="time"
-                                        className="rounded-md focus:outline-none cursor-pointer"
-                                        onChange={handleTimeChange}
-                                        value={timeCard}
-                                    />
-                                </div>
-                                {trueEditCard?(
-                                    <div className="flex" >
-                                        <BsCheck className="text-[40px] cursor-pointer hover:text-8" onClick={()=>{
-                                            editDateTime();
-                                
-                                        }}  />
-                                        <BsX className="text-[40px] cursor-pointer hover:text-red-500" onClick={()=>{
-                                            const res = transfDateTime(card.dataHora);
-                                            setDateCard(res.date);
-                                            setTimeCard(res.time);
-                                            setTrueEditCard(false);
-                                        }}/>
-                                    </div>
+                            <div className="flex flex-col" >
+                                <p className="mb-3" >Data de Entrega</p>
+                                {dateCard && timeCard?(
+                                    <DateTime add={()=>{
+                                        editDateTime();
+                                    }} close={()=>{
+                                        const res = transfDateTime(card.dataHora);
+                                        setDateCard(res.date);
+                                        setTimeCard(res.time);
+                                        setTrueEditCard(false);
+                                    }} dateCard={dateCard} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} timeCard={timeCard} trueEditCard={trueEditCard} />
                                 ):null}
                             </div>
                         </div>
-                    </div>
-                    {showListUsers?(
-                        <AddMember card={card} />
-                    ):null}
-                    {showListTags?(
-                        <AddTags cardListTag={card.tags} update={()=>{setUpdate(!update)}} cardId={card.id} />
-                    ):null}
-                    <div className="flex flex-col mt-10" >
-                        <p className="font-bold text-white text-[24px]" >Descrição</p>
-                        <textarea name="description" id="description" value={description} onChange={handleDescription} className="mt-5 focus:outline-0 focus:bg-2/50 text-white h-[200px] max-h-[200px] focus:pl-3 focus:px-3" ></textarea>
-                        {description !== card.descricao?(
-                            <div className="flex mt-1 gap-5 text-white items-center" >
-                                <div className="flex gap-2 items-center cursor-pointer hover:scale-105 transition-all duration-300" onClick={editDescription} >
-                                    <CiPen className="text-[27px]" />
-                                    <p>Editar</p>
-                                </div>
-                                <div className="flex gap-2 items-center cursor-pointer hover:scale-105 transition-all duration-300" onClick={()=>{
-                                    setDescription(card.descricao);
-                                }} >
-                                    <FaRegTrashAlt className="text-[20px]" />
-                                    <p>Excluir</p>
-                                </div>
-                            </div>
+                        {showListUsers?(
+                            <AddMember card={card} />
                         ):null}
-                    </div>
-                    <div className="flex flex-col mt-10 h-[250px] overflow-y-auto" >
-                        <div className="flex flex-col" >
-                            <p className="font-bold text-white text-[24px]" >Anexo</p>
+                        {showListTags?(
+                            <AddTags cardListTag={card.tags} update={()=>{setUpdate(!update)}} cardId={card.id} />
+                        ):null}
+                        <div className="flex flex-col mt-10" >
+                            <p className="font-bold text-white text-[24px]" >Descrição</p>
+                            <textarea name="description" id="description" value={description} onChange={handleDescription} className="mt-5 focus:outline-0 focus:bg-2/50 text-white h-[100px] max-h-[100px] focus:pl-3 focus:px-3" ></textarea>
+                            {description !== card.descricao?(
+                                <div className="flex mt-1 gap-5 text-white items-center" >
+                                    <div className="flex gap-2 items-center cursor-pointer hover:scale-105 transition-all duration-300" onClick={editDescription} >
+                                        <CiPen className="text-[27px]" />
+                                        <p>Editar</p>
+                                    </div>
+                                    <div className="flex gap-2 items-center cursor-pointer hover:scale-105 transition-all duration-300" onClick={()=>{
+                                        setDescription(card.descricao);
+                                    }} >
+                                        <FaRegTrashAlt className="text-[20px]" />
+                                        <p>Excluir</p>
+                                    </div>
+                                </div>
+                            ):null}
                         </div>
-                        
-
+                        <AddAnex CardId={card.id}  listAnex={card.anexos} update={()=>{setUpdate(!update)}}/>
+                        <CheckList checklist={card.checklist} card={card} update={()=>{setUpdate(!update)}} />
+                        <CommentCard/>
                     </div>
                 </div>
             ):(

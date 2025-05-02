@@ -182,7 +182,7 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 min-w-[900px]">
+    <div className="bg-white rounded-lg shadow-md p-4 min-w-[900px] ">
       <div className="overflow-x-auto">
         <table className="w-full table-auto">
           <thead>

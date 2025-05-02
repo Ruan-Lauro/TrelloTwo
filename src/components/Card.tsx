@@ -4,6 +4,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { CardType } from '../pages/workSpace';
 import { MdOutlineStar } from "react-icons/md";
 import { useGetCard } from '../hooks/useGetCard';
+import Tags from './tags';
 
 interface CardProps {
   card: CardType;
@@ -74,6 +75,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
     fetchDate();
   }, [card.id, getCardId]);
 
+
   return (
     <div
     onClick={onClick}
@@ -86,10 +88,10 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
       }`}
     >
       <div className='flex items-center justify-between'>
-        <div>
-          <div className='text-white font-bold bg-6 w-[93px] h-[21px] rounded-full flex items-center justify-center'>
-            <p>Front-end</p>
-          </div>
+        <div className='flex gap-2' >
+          {card.tags.slice(0,3).map(val=>(
+            <Tags color={val.cor} name={val.titulo}/>
+          ))}
         </div>
         <MdOutlineStar className='text-[30px] text-4' onClick={()=>{
           deleteCard(card.id);

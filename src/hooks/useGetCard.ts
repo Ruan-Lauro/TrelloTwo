@@ -31,7 +31,7 @@
 
   export type cardAnex = {
     CardId: number; 
-    Anexo?: Blob
+    Anexo: Blob | string;
   };
 
   interface Card {
@@ -41,7 +41,8 @@
     editCard: (card:cardEdit) => Promise<string | boolean | undefined>;
     moveCard: (card:cardMove) => Promise<string | boolean | undefined>;
     addComentCard: (card:cardComment) => Promise<string | boolean | undefined>;
-    addAnexCard: (card: cardAnex) => Promise<string | boolean | undefined>;
+    addAnexCard: (formData: FormData) => Promise<string | boolean | undefined>;
+    deleteAnex: (id: number) => Promise<string | boolean | undefined>;
   }
 
   export const useGetCard= (): Card => {
@@ -229,35 +230,66 @@
   
     };
 
-    const addAnexCard = async (card: cardAnex) => {
-        try {
-          const response = await api.post('/workspace/card/anexo/', card, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-          })
+    const addAnexCard = async (formData: FormData) => {
+      try {
+          const response = await api.post('/workspace/card/anexo/', formData, {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'multipart/form-data'
+              }
+          });
   
-          if(response.status === 200){
-            return true;
+          if (response.status === 200) {
+              return true;
           }
-        } catch (error) {
-  
+      } catch (error) {
           if (axios.isAxiosError(error)) {
-            
-            if (error.response && error.response.status === 400) {
-              
-              return "create Card erro"
-            } else {
-              return "servidor erro"
-            }
+              if (error.response && error.response.status === 400) {
+                  return "create Card erro";
+              } else {
+                  return "servidor erro";
+              }
           } else {
-          
-            console.error('Erro desconhecido:', error)
+              console.error('Erro desconhecido:', error);
           }
+      }
+  };
+
+  const deleteAnex = async (id: number) => {
+    try {
+
+      const response = await api.delete('/workspace/card/anexo/delete/'+id, 
+      {
+        headers: {
+            Authorization: `Bearer ${token}`,
+          },
+      })
+
+      if(response.status === 200){
+        return true;
+      }
+
+    } catch (error) {
+
+      if (axios.isAxiosError(error)) {
+        
+        if (error.response && error.response.status === 400) {
+          
+          return "Delete card erro"
+        } else {
+          return "servidor erro"
         }
+      } else {
+       
+        console.error('Erro desconhecido:', error)
+      }
+      
+      
+    }
+  };
   
-    };
+  
 
 
-    return { getCardId, createCard, addAnexCard, addComentCard, deleteCard, editCard, moveCard}
+    return { getCardId, createCard, addAnexCard, addComentCard, deleteCard, editCard, moveCard, deleteAnex}
   };

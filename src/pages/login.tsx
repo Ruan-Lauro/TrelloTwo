@@ -46,21 +46,25 @@ function Login() {
   const authentication = async (e: FormEvent) =>{
     e.preventDefault();
     const res = await authenticationLogin(email, password);
-    if(res === "login erro"){
-      setErro("Erro nas credenciais");
-    }else{
-      if(res === undefined) return;
-      const resToken = await authenticationT(res);
+    if(res === "Unauthorized"){
+      return setErro("E-mail ou senha errada");
+    }else if(res === "login erro"){
+      return setErro("Algo está errado na requisição");
+    }else if(res === "servidor erro" || res === undefined){
+      return setErro("Erro no servidor");
+    }
+
+    setErro("");
+
+    const resToken = await authenticationT(res);
       if( resToken && typeof resToken === "boolean"){
         localStorage.setItem("token", res);
         const resGetUser = await getUser();
         if( resGetUser &&typeof resGetUser !== "string" && resGetUser.name){
           localStorage.setItem("user", JSON.stringify(resGetUser));
-          console.log(resGetUser);
           navigate("/Dashboard")
         }
       }
-    }
 
   };
 
@@ -85,7 +89,7 @@ function Login() {
         
         </Form>
         {erro?(
-          <p className='font-medium text-red-500 text-[20px]' >{erro}</p>
+          <p className='font-medium text-red-400 text-[20px] mt-2' >{erro}</p>
         ):null}
       </section>
     </main>

@@ -92,7 +92,7 @@ const AddTags = ({cardListTag, update, cardId}:addTags) => {
     }
     
     return(
-        <div className="absolute left-[40%] w-[300px] flex flex-col bg-2/50 border-[1px] border-white/30 text-white rounded-[10px] mt-2 pb-5 max-h-[403px] px-3" >
+        <div className="absolute z-10 left-[40%] top-[30%] w-[300px] flex flex-col bg-2 border-[1px] border-white/30 text-white rounded-[10px] mt-2 pb-5 max-h-[403px] px-3" >
             <p className="font-bold text-[18px] mt-3 text-center" >Tags</p>
             <input type="text" className="mt-5 self-center w-[90%] h-[35px] bg-white focus:outline-0 rounded-[5px] pl-3 placeholder:text-black/70 placeholder:font-semibold text-black" placeholder="Search" onChange={handleSearch} />
             <div className="pl-1 pt-3 pb-3 flex flex-col gap-2 w-[100%] items-center mt-3 max-h-[182px] overflow-y-auto bg-2/55 rounded-[10px]" >

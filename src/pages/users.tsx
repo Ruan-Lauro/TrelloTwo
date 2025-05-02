@@ -17,7 +17,7 @@ function Users (){
     };
 
     return(
-        <LayoutPage name="Usuários" >
+        <LayoutPage name="Usuários" loadingValue={false}>
             <main className="p-6 bg-gray-100 h-full  min-w-[200px] " >
                 <header className="flex items-center justify-between max-xl:flex-col" >
                     <h2 className="text-2xl text-[#003057] font-bold max-xl:mb-5" >Listagem de Usuários</h2>

@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { useGetUser, user, userGet } from "../hooks/useGetUser";
 
 function PrivateMessages() {
-    const { messages, sendPrivateMessage, allMessages } = useChat();
+    const { messages, sendPrivateMessage, getPrivateMessage } = useChat();
     const [message, setMessage] = useState('');
     const [newUser, setNewUser] = useState<userGet>();
     const [user, setUser] = useState<user>();
@@ -30,6 +30,13 @@ function PrivateMessages() {
         }
     }, [id]);
 
+
+    useEffect(()=>{
+        if(id){
+            getPrivateMessage(id)
+            console.log(messages);
+        }
+    },[messages])
 
     useEffect(() => {
         if (id && messages.length > 0) {

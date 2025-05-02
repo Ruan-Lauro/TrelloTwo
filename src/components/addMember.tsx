@@ -26,7 +26,7 @@ const AddMember = ({card}:addMember) => {
     },[])
 
     return(
-        <div className="absolute w-[300px] flex flex-col bg-2/50 border-[1px] border-white/30 text-white rounded-[10px] mt-2 pb-5" >
+        <div className="absolute top-[30%] z-10 w-[300px] flex flex-col bg-2 border-[1px] border-white/30 text-white rounded-[10px] mt-2 pb-5" >
             <p className="font-bold text-[18px] mt-3 text-center" >Membros</p>
             <div className="flex flex-col" >
                 <p className="font-bold text-[18px] mt-5 text-4 mb-3 ml-3" >Adicionados:</p>

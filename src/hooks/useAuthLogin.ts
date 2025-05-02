@@ -19,9 +19,10 @@ export const useAuthLogin = (): UseAuthLoginResult => {
       if (axios.isAxiosError(error)) {
         
         if (error.response && error.response.status === 400) {
-          
           return "login erro"
-        } else {
+        } else if (error.response && error.response.status === 401){
+          return "Unauthorized"
+        }else {
           return "servidor erro"
         }
       } else {

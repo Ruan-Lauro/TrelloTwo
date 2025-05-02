@@ -9,15 +9,14 @@ export interface Message {
 
 interface ChatContextData {
   messages: Message[];
-  allMessages: Message[];
   sendPrivateMessage: (toUserId: string | number, conteudo: string) => void;
+  getPrivateMessage: (toUserId: string) => void;
 }
 
 const ChatContext = createContext<ChatContextData>({} as ChatContextData);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [allMessages, setAllMessages] = useState<Message[]>([]);
   const token = localStorage.getItem("token") || "";
 
   useEffect(() => {
@@ -32,10 +31,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
           connection.on("ReceiveMessage", (msg: Message) => {
             setMessages(prev => [...prev, msg]);
           });
-
-          connection.on("ReceiveAllMessages", (all: Message[]) => {
-            setAllMessages(all);
-          });
+          
         })
         .catch(err => console.error("Erro na conexão:", err));
     }
@@ -56,10 +52,28 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         console.error("Erro ao enviar:", err)
       );
     }
-  };    
+  };
+
+  const getPrivateMessage = async (toUserId: string): Promise<Message[]> => {
+    const conn = getConnection();
+    if (conn?.state === "Connected") {
+      
+      try {
+         await conn.invoke<any[]>("GetPrivateMessages", toUserId);
+      } catch (err) {
+        console.error("Erro ao buscar mensagens:", err);
+        return [];
+      }
+    }
+    return [];
+  };
 
   return (
-    <ChatContext.Provider value={{ messages, allMessages, sendPrivateMessage }}>
+    <ChatContext.Provider value={{ 
+      messages,
+      getPrivateMessage, 
+      sendPrivateMessage 
+    }}>
       {children}
     </ChatContext.Provider>
   );

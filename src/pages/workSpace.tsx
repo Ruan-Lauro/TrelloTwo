@@ -23,7 +23,7 @@ import { useGetWorkSpace } from '../hooks/useGetWorkSpace';
 import { useGetColumn } from '../hooks/useGetColunm';
 import { useGetCard } from '../hooks/useGetCard';
 import LoadingAnimation from '../components/loading';
-import ShowCard from '../components/showCard';
+import ShowCard, { Tag } from '../components/showCard';
 
 // Definição dos tipos
 export type Membro = {
@@ -39,6 +39,7 @@ export type CardType = {
   descricao: string;
   membersList: Membro[];
   dataHora?: Date;
+  tags: Tag[];
 };
 
 export type ColunaType = {
@@ -405,11 +406,13 @@ const WorkSpace = () => {
 
   const [click, setClick] = useState(false);
   const [idCard, setIdCard] = useState<number>();
+  const [columnName, setColumnName] = useState("");
 
-  const showCardInfor = (number: number, show: boolean) =>{
+  const showCardInfor = (number: number, show: boolean, nameColumn:string) =>{
     if(show){
       setClick(true);
       setIdCard(number);
+      setColumnName(nameColumn);
     }
   };
 
@@ -454,7 +457,7 @@ const WorkSpace = () => {
             </DndContext>
         </div>
         {click && idCard?(
-        <ShowCard id={idCard} nameColumn='num sei' closeCard={()=>{
+        <ShowCard id={idCard} nameColumn={columnName} closeCard={()=>{
           setClick(false);
         }} />
       ):null}

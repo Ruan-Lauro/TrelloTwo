@@ -115,7 +115,7 @@ export const useGetUser = (): UseGetResult => {
   const getListUserNoSearch = async ( ) =>{
     try {
 
-      const response = await api.get('/usuario/list/', {
+      const response = await api.get('/usuario/list/?PageMax=100', {
         headers: {
             Authorization: `Bearer ${token}`,
           },
