@@ -189,6 +189,8 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
             })
         }   
     }
+
+    
  
 
     return(

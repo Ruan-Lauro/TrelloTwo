@@ -37,6 +37,7 @@ interface UseGetResult {
   getListUserNoSearch: () => Promise<any>;
   createUser: (user: userCreate) => Promise<any>;
   deleteUser: (id:number) => Promise<any>;
+  getUserId: (id: number) => Promise<userGet>;
 }
 
 export const useGetUser = (): UseGetResult => {
@@ -111,6 +112,36 @@ export const useGetUser = (): UseGetResult => {
     }
   };
 
+  const getUserId = async ( id: number) =>{
+    try {
+
+      const response = await api.get(`/usuario/list/${id}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+          },
+      })
+
+      return response.data;
+
+    } catch (error) {
+
+      if (axios.isAxiosError(error)) {
+        
+        if (error.response && error.response.status === 400) {
+          
+          return "user erro"
+        } else {
+          console.log(error)
+          return "servidor erro"
+        }
+      } else {
+       
+        console.error('Erro desconhecido:', error)
+      }
+      
+      
+    }
+  };
   
   const getListUserNoSearch = async ( ) =>{
     try {
@@ -141,7 +172,6 @@ export const useGetUser = (): UseGetResult => {
       
     }
   };
-
 
   const createUser = async ( user: userCreate) =>{
     try {
@@ -215,5 +245,7 @@ export const useGetUser = (): UseGetResult => {
   }
 
 
-  return { getUser, getListUser,createUser, deleteUser, getListUserNoSearch }
+  return { getUser, getListUser,createUser, deleteUser, getListUserNoSearch, getUserId }
 };
+
+

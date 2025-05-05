@@ -8,6 +8,7 @@ interface workSpace {
     getWorkSpaceId: ( id: number) => Promise<WorkSpaceNew[] | string | undefined>;
     postWorkSpace: ( name: string) => Promise<boolean | string | undefined>;
     deleteWorkSpace: ( id: number) => Promise<boolean | string | undefined>;
+    addUserWorkSpace: (id:number, list:number[]) => Promise<boolean | string | undefined>;
 }
 
 export const useGetWorkSpace= (): workSpace => {
@@ -132,5 +133,40 @@ export const useGetWorkSpace= (): workSpace => {
     }
   }
 
-  return { getWorkSpace, getWorkSpaceId, postWorkSpace, deleteWorkSpace }
+  const addUserWorkSpace = async ( id:number, list:number[]) => {
+    try {
+      const response = await api.put('usuario/edit-workspaces/',
+        {
+          id,
+          workspaceIds: list,
+        },
+        {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
+      })
+
+      if(response.status === 200){
+        return true
+      }
+    } catch (error) {
+
+      if (axios.isAxiosError(error)) {
+        console.log(error)
+        if (error.response && error.response.status === 400) {
+          
+          return "Get workspace erro"
+        } else {
+          return "servidor erro"
+        }
+      } else {
+       
+        console.error('Erro desconhecido:', error)
+      }
+    }
+
+  };
+
+
+  return { getWorkSpace, getWorkSpaceId, postWorkSpace, deleteWorkSpace, addUserWorkSpace }
 };
