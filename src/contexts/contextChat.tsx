@@ -16,7 +16,7 @@ export interface GroupMessage extends Message {
 }
 
 interface ChatContextData {
-  messages: Message[];
+  messages: Message | undefined;
   privateMessages: Message[]; 
   groupMessages: GroupMessage | undefined;
   privateGroupMessages: GroupMessage[];
@@ -30,7 +30,7 @@ interface ChatContextData {
 const ChatContext = createContext<ChatContextData>({} as ChatContextData);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message>();
   const [privateMessages, setPrivateMessages] = useState<Message[]>([]);
   const [groupMessages, setGroupMessages] = useState<GroupMessage | undefined>();
   const [privateGroupMessages, setPrivateGroupMessages] = useState<GroupMessage[]>([]);
@@ -47,17 +47,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       if (!isInitialized) {
         // Registrar todos os handlers de eventos
         registerListener<[Message]>("ReceiveMessage", (msg: Message) => {
-          setMessages(prev => {
-            const isDuplicate = prev.some(
-              m => m.autor === msg.autor && 
-                  m.conteudo === msg.conteudo && 
-                  m.dataHora === msg.dataHora
-            );
-            
-            if (isDuplicate) return prev;
-            return [...prev, msg];
-          });
-        
+          if(!msg) return;
+          setMessages(msg);
         });
 
         registerListener("ReceiveAllMessages", (msgs: Message[]) => {

@@ -10,7 +10,7 @@ import LoadingLetter from '../components/loadingLetter';
 
 function PrivateMessages() {
 
-    const { messages, sendPrivateMessage, getPrivateMessage, privateMessages } = useChat();
+    const { messages, sendPrivateMessage, getPrivateMessage, privateMessages, clearPrivateMessages } = useChat();
 
     const [message, setMessage] = useState('');
     const [chatPartner, setChatPartner] = useState<userGet | null>(null);
@@ -35,7 +35,8 @@ function PrivateMessages() {
 
     const fetchData = async () => {
         if (!id) return;
-
+        setFilteredMessages([]);
+        await clearPrivateMessages();
         const userJson = localStorage.getItem("user");
         if (!userJson) {
             navigator('/login');
@@ -63,14 +64,13 @@ function PrivateMessages() {
    
     useEffect(() => {
         if (privateMessages && !isLoading) {
-           
             setFilteredMessages(privateMessages);
         }
     }, [privateMessages, isLoading]);  
 
     useEffect(() => {
-        if (messages && messages.length) {
-            setFilteredMessages(prev => [...prev, ...messages]);
+        if (messages) {
+            setFilteredMessages(prev => [...prev, messages]);
         }
     }, [messages]); 
 

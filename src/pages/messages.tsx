@@ -18,7 +18,7 @@ function Messages (){
     const [showCreateGroup, setShowCreateGroup] = useState(false);
     const [update, setUpdate] = useState(false);
     const [user, setUser] = useState<userGet>();
-    const { privateGroupMessages, getGroupMessages } = useChat();
+    const { privateGroupMessages, getGroupMessages, clearPrivateMessages } = useChat();
 
     useEffect(()=>{
         const listUser = async () =>{
@@ -46,6 +46,7 @@ function Messages (){
         }
         listUser();
         listGroup();
+        clearPrivateMessages();
     },[update])
     
     const msgGroupTotal = (groupId: number) => {
