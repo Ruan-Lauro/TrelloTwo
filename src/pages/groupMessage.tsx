@@ -119,6 +119,7 @@ function GroupMessages() {
         }
         
         const members = await getGroupUsers(parseInt(id));
+        console.log(members)
         if (typeof members !== 'string' && members !== undefined) {
             setGroupUsers(members);
 
@@ -143,7 +144,6 @@ function GroupMessages() {
         if (message.trim() && id) {
             sendGroupMessage(id, message);
             setMessage('');
-
         }
     };
 

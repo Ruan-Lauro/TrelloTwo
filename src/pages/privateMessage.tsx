@@ -9,7 +9,9 @@ import LoadingLetter from '../components/loadingLetter';
 
 
 function PrivateMessages() {
+
     const { messages, sendPrivateMessage, getPrivateMessage, privateMessages } = useChat();
+
     const [message, setMessage] = useState('');
     const [chatPartner, setChatPartner] = useState<userGet | null>(null);
     const [currentUser, setCurrentUser] = useState<user | null>(null);
@@ -58,10 +60,10 @@ function PrivateMessages() {
         await getPrivateMessage(id);
         
     };
-
    
     useEffect(() => {
         if (privateMessages && !isLoading) {
+           
             setFilteredMessages(privateMessages);
         }
     }, [privateMessages, isLoading]);  

@@ -24,7 +24,7 @@ interface ChatContextData {
   getPrivateMessage: (toUserId: string | number) => Promise<Message[]>;
   sendGroupMessage: (toGroupId: string | number, conteudo: string) => Promise<void>;
   getGroupMessages: (toGroupId: string | number) => Promise<void>;
-  clearPrivateMessages: () => void;  // Nova função para limpar mensagens privadas
+  clearPrivateMessages: () => void; 
 }
 
 const ChatContext = createContext<ChatContextData>({} as ChatContextData);
@@ -86,7 +86,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     initConnection();
   }, [isInitialized]);
 
-  // Função para limpar mensagens privadas
   const clearPrivateMessages = () => {
     setPrivateMessages([]);
     setPrivateGroupMessages([])
@@ -145,7 +144,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
       const conn = getConnection();
       if (conn) {
         const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
-        // Limpar mensagens de grupo antes de solicitar novas
+    
         setPrivateGroupMessages([]);
         await conn.invoke("GetGroupMessages", groupId);
       }

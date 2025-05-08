@@ -18,7 +18,7 @@ function Messages (){
     const [showCreateGroup, setShowCreateGroup] = useState(false);
     const [update, setUpdate] = useState(false);
     const [user, setUser] = useState<userGet>();
-    const { getGroupMessages } = useChat();
+    const { privateGroupMessages, getGroupMessages } = useChat();
 
     useEffect(()=>{
         const listUser = async () =>{
@@ -48,18 +48,22 @@ function Messages (){
         listGroup();
     },[update])
     
-    // const msgGroupTotal = (groupId: number) => {
-    //     getGroupMessages(groupId);
-    //     const result = localStorage.getItem("msgGroupRead"+groupId);
+    const msgGroupTotal = (groupId: number) => {
+        // console.log("Quantidade")
+        // getGroupMessages(groupId);
+        // const result = localStorage.getItem("msgGroupRead"+groupId);
 
-    //     if(result){
-    //         const resultJson = JSON.parse(result);
-           
-    //         return 1;
-    //     }else{
-    //         return 2;
-    //     }
-    // };    
+        // if(result){
+        //     const resultJson = JSON.parse(result);
+        //     if( resultJson.length > 0 && privateGroupMessages.length > 0 && privateGroupMessages[0].grupoId === groupId){
+        //         return privateGroupMessages.length - resultJson.length;
+        //     }
+        // }else{
+        //     return privateGroupMessages.length;
+        // }
+        return 0;
+    
+    };    
     
 
     return(
@@ -109,9 +113,9 @@ function Messages (){
                                             <ImgUser color="bg-4" nome={group.nome} img={group.foto} id={group.id} />
                                             <p className="text-[24px] font-bold truncate max-w-[200px]" >{group.nome}</p>
                                         </div>
-                                        {/* {msgGroupTotal(group.id)?(
+                                        {msgGroupTotal(group.id)?(
                                             <div className="flex items-center justify-center w-[28px] h-[28px] rounded-full bg-2" ><p className="font-bold text-white" >{msgGroupTotal(group.id)}</p></div>
-                                        ):null} */}
+                                        ):null}
                                         
                                     </div>
                                 ))}
