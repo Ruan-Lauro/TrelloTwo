@@ -64,7 +64,7 @@ function AddUser (){
   };
 
     return(
-        <LayoutPage name="Criar Usuários" >
+        <LayoutPage name="Criar Usuários" loadingValue={false} >
             <main className="p-6 bg-gray-100 h-full min-w-[300px]" >
                 <header className="flex items-center justify-between" >
                         <h2 className="text-2xl text-[#003057] font-bold " >Criar Usuários</h2>                    

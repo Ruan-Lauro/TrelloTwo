@@ -64,7 +64,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
 
 
   const createCardNew = () => {
-    const res = createCard({ColunaId: coluna.id, Descricao:"Coloque uma descriçaõ", Titulo:"Edite o Card", DataHora:new Date()});
+    const res = createCard({ColunaId: coluna.id, Descricao:"Coloque uma descriçaõ", Titulo:"Edite o Card", DataHora:null});
     if(typeof res === "object" && res !== undefined){
       functionUptade();
     } 

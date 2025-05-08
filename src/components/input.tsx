@@ -6,6 +6,7 @@ export type Input = {
     type: string;
     value: string;
     placeholder: string;
+    infor?: string;
 }
 
 export default function Input({

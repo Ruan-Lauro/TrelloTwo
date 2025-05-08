@@ -6,6 +6,8 @@ import { useGetWorkSpace } from '../hooks/useGetWorkSpace';
 import { workSpaceType } from './selectMenuLeft';
 import RenderWorkSpace from './renderWorkSpace';
 import ShowWorkSpaceSelect from './showWorkSpaceSelect';
+import { useNavigate } from 'react-router-dom';
+import ImgUser from './imgUser';
 
 interface Usuario {
   id: number;
@@ -44,6 +46,7 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
   const [listWorkSpace, setListWorkSpace] = useState<workSpaceType[]>([]);
   const [openWorkSpaceIds, setOpenWorkSpaceIds] = useState<number[]>([]);
   const [update, setUpdate] = useState(false);
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -101,7 +104,7 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
   };
 
   const handleEdit = (id: number) => {
-    console.log(`Editar usuário ${id}`);
+    navigate(`/EditarUsuarios/${id}`);
   };
 
   const handleDelete = async (id: number) => {
@@ -204,24 +207,10 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
                   className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}
                 >
                   <td className="px-4 py-3 ">
-                    {user.foto ? (
-                      <img
-                        src={user.foto}
-                        alt={`Foto de ${user.nome}`}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 font-bold">
-                        {user.nome === 'Administrador' ? (
-                          <span className="text-2xl">👤</span>
-                        ) : (
-                          getDefaultAvatar(user.nome)
-                        )}
-                      </div>
-                    )}
+                     <ImgUser color="bg-4" nome={user.nome} img={user.foto} id={user.id} />
                   </td>
                   <td className="px-4 py-3 text-[18px] 2xl:text-[24px] break-words max-w-[200px] ">{user.nome}</td>
-                  <td className="px-4 py-3 text-[18px] 2xl:text-[20px]">{user.email}</td>
+                  <td className="px-4 py-3 text-[18px] 2xl:text-[20px]  break-words max-w-[200px]">{user.email}</td>
                   <td className="px-4 py-3 relative">
                     <RenderWorkSpace
                       listWorkSpace={listWorkSpace}

@@ -421,7 +421,7 @@ const WorkSpace = () => {
        
         <div className="p-6 bg-gray-100 h-[100%]">
             <div className='flex items-center justify-between mb-5' >
-              <h2 className="text-2xl text-[#003057] font-bold">Área de Trabalho - {WorkSpace?.nome!}</h2>
+              <h2 className="text-2xl text-[#003057] font-bold truncate w-[60%] ">Área de Trabalho - {WorkSpace?.nome!}</h2>
               <div className='flex gap-2 items-center hover:scale-105 transition-all duration-300 cursor-pointer' onClick={createColumnNew} >
                 <p className='text-11 font-bold' >Adicionar Coluna</p>
                 <div className='flex items-center justify-center text-1 font-bold text-[30px] border-1 border-[3px] w-9 h-9 rounded-full' >

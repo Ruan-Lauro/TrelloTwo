@@ -107,7 +107,7 @@ const AddTags = ({cardListTag, update, cardId}:addTags) => {
                                         <div className="w-[23px] h-[20px] bg-white border-white border-[2px] rounded-[5px] hover:bg-transparent group cursor-pointer" >
                                             <IoMdCheckmark className="text-1 flex group-hover:hidden" />
                                         </div>
-                                        <div className={`flex items-center justify-center w-full h-[35px] rounded-[5px] ${res.inforCard.cor === "#000000"?"":"text-white"} font-bold`} style={{background: res.inforCard.cor}} ><p>{res.inforCard.titulo}</p></div>
+                                        <div className={`flex items-center justify-center w-full  h-[35px] rounded-[5px] ${res.inforCard.cor === "#000000"?"":"text-white"} font-bold truncate`} style={{background: res.inforCard.cor}} ><p>{res.inforCard.titulo}</p></div>
                                     </div>
                                 ):(
                                     <div className="flex gap-3 items-center w-[99%] cursor-pointer" onClick={()=>{
@@ -116,7 +116,7 @@ const AddTags = ({cardListTag, update, cardId}:addTags) => {
                                         <div className="w-[23px] h-[20px] bg-transparent border-white border-[2px] rounded-[5px] hover:bg-white group" >
                                             <IoMdCheckmark className="text-1 hidden group-hover:flex" />
                                         </div>
-                                        <div className={`flex items-center justify-center w-full h-[35px] rounded-[5px] ${res.inforCard.cor === "#ffffff" || res.inforCard.cor === "#FFFFFF"?"text-1":"text-white"} font-bold`} style={{background: res.inforCard.cor}} >
+                                        <div className={`flex items-center justify-center w-full h-[35px] rounded-[5px] ${res.inforCard.cor === "#ffffff" || res.inforCard.cor === "#FFFFFF"?"text-1":"text-white"} font-bold truncate`} style={{background: res.inforCard.cor}} >
                                             <p>{res.inforCard.titulo}</p>
                                         </div>
                                     </div>

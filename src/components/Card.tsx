@@ -98,7 +98,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
         }} />
       </div>
 
-      <h3 className="font-bold mb-1 text-[20px]">{card.titulo}</h3>
+      <h3 className="font-bold mb-1 text-[20px] max-h-[100px] overflow-hidden break-words max-w-[100%]">{card.titulo}</h3>
 
       <div className='flex items-center justify-between'>
         { card && card.membersList && card.membersList.length !== undefined && card.membersList.length > 0 && (

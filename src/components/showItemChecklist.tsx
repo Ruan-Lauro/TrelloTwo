@@ -78,7 +78,7 @@ const ShowItemChecklist = ({val, clickBox, removeChecklist, update}:showItemChec
                 <div className="flex items-center justify-between w-full" >
                     <div className="flex items-center gap-3" >  
                         <BoxCheck value={val.concluido} click={clickBox} />
-                        <p className={`${val.concluido?"line-through":""}`} >{val.descricao}</p>
+                        <p className={`${val.concluido?"line-through":""} max-w-[500px] break-words overflow-y-auto max-h-[80px]`} >{val.descricao}</p>
                     </div>
                     <div className="flex items-center gap-3" >
                         <DateChecklist val={val} />

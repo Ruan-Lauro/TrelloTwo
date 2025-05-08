@@ -8,6 +8,9 @@ import WorkSpace from "./pages/workSpace";
 import { ProtectedLayout } from "./components/protectPage";
 import PrivateMessages from "./pages/privateMessage";
 import { ChatProvider } from "./contexts/contextChat";
+import EditUser from "./pages/editUser";
+import EditProfile from "./pages/editProfile";
+import GroupMessages from "./pages/groupMessage";
 
 function App() {
 
@@ -21,8 +24,11 @@ function App() {
           <Route path="/Mensagens" element={<Messages/>} />
           <Route path="/Usuarios" element={<Users/>} />
           <Route path="/CriarUsuario" element={<AddUser/>} />
+          <Route path="/EditarUsuarios/:id" element={<EditUser/>} />
+          <Route path="/EditarPerfil/" element={<EditProfile/>} />
           <Route path="/AreaDeTrabalho/:id" element={<WorkSpace/>} />
           <Route path="/MensagemAoUsuario/:id" element={<PrivateMessages/>} />
+          <Route path="/MensagemAoGrupo/:id" element={<GroupMessages/>} />
         </Route>
       </Routes>
       </ChatProvider>

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { createConnection, getConnection } from '../services/websocket';
+import { createConnection, getConnection, registerListener, waitForConnection } from '../services/websocket';
 
 export interface Message {
   autor: string;
@@ -7,84 +7,176 @@ export interface Message {
   dataHora: string;
 }
 
+export interface PrivateMessage extends Message {
+  toUserId: string; 
+}
+
+export interface GroupMessage extends Message {
+  grupoId: number;
+}
+
 interface ChatContextData {
   messages: Message[];
-  sendPrivateMessage: (toUserId: string | number, conteudo: string) => void;
-  getPrivateMessage: (toUserId: string) => void;
+  privateMessages: Message[]; 
+  groupMessages: GroupMessage | undefined;
+  privateGroupMessages: GroupMessage[];
+  sendPrivateMessage: (toUserId: string | number, conteudo: string) => Promise<void>;
+  getPrivateMessage: (toUserId: string | number) => Promise<Message[]>;
+  sendGroupMessage: (toGroupId: string | number, conteudo: string) => Promise<void>;
+  getGroupMessages: (toGroupId: string | number) => Promise<void>;
+  clearPrivateMessages: () => void;  // Nova função para limpar mensagens privadas
 }
 
 const ChatContext = createContext<ChatContextData>({} as ChatContextData);
 
 export function ChatProvider({ children }: { children: ReactNode }) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const token = localStorage.getItem("token") || "";
+  const [privateMessages, setPrivateMessages] = useState<Message[]>([]);
+  const [groupMessages, setGroupMessages] = useState<GroupMessage | undefined>();
+  const [privateGroupMessages, setPrivateGroupMessages] = useState<GroupMessage[]>([]);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   useEffect(() => {
-    const connection = getConnection() || createConnection(token);
-
-    if (connection.state === "Disconnected") {
-      connection
-        .start()
-        .then(() => {
-          console.log("Conectado ao SignalR");
-
-          connection.on("ReceiveMessage", (msg: Message) => {
-            setMessages(prev => [...prev, msg]);
+    const token = localStorage.getItem("token") || "";
+    const initConnection = async (): Promise<void> => {
+      const connection = getConnection() || createConnection(token);
+      
+      // Esperar pela conexão
+      await waitForConnection();
+      
+      if (!isInitialized) {
+        // Registrar todos os handlers de eventos
+        registerListener<[Message]>("ReceiveMessage", (msg: Message) => {
+          setMessages(prev => {
+            const isDuplicate = prev.some(
+              m => m.autor === msg.autor && 
+                  m.conteudo === msg.conteudo && 
+                  m.dataHora === msg.dataHora
+            );
+            
+            if (isDuplicate) return prev;
+            return [...prev, msg];
           });
-          
-        })
-        .catch(err => console.error("Erro na conexão:", err));
-    }
+        
+        });
 
-    return () => {
-      if (connection.state === "Connected") {
-        connection.stop();
+        registerListener("ReceiveAllMessages", (msgs: Message[]) => {
+          if (!msgs || msgs.length === 0) {
+            
+            setPrivateMessages([]);
+            return;
+          }
+          setPrivateMessages(msgs);
+        });
+
+        registerListener("ReceiveGroupMessage", (msg: GroupMessage) => {
+          if (!msg) return;
+          setGroupMessages(msg);
+        });
+        
+        registerListener("ReceiveAllGroupMessages", (msgs: GroupMessage[]) => {
+          if (!msgs) return;
+          setPrivateGroupMessages(msgs);
+        });
+        
+        setIsInitialized(true);
       }
     };
-  }, [token]);
 
-  const sendPrivateMessage = (toUserId: string | number, conteudo: string) => {
-    const conn = getConnection();
-    if (conn?.state === "Connected") {
-      const userId = typeof toUserId === 'number' ? toUserId.toString() : toUserId;
+    initConnection();
+  }, [isInitialized]);
+
+  // Função para limpar mensagens privadas
+  const clearPrivateMessages = () => {
+    setPrivateMessages([]);
+    setPrivateGroupMessages([])
+  };
+
+  const sendPrivateMessage = async (toUserId: string | number, conteudo: string): Promise<void> => {
+    try {
+      await waitForConnection();
       
-      conn.invoke("PrivateMessage", userId, conteudo).catch(err =>
-        console.error("Erro ao enviar:", err)
-      );
+      const conn = getConnection();
+      if (conn) {
+        const userId = typeof toUserId === 'number' ? toUserId.toString() : toUserId;
+        await conn.invoke("PrivateMessage", userId, conteudo);
+      }
+    } catch (err) {
+      console.error("Erro ao enviar mensagem privada:", err);
     }
   };
 
-  const getPrivateMessage = async (toUserId: string): Promise<Message[]> => {
-    const conn = getConnection();
-    if (conn?.state === "Connected") {
+  const getPrivateMessage = async (toUserId: string | number): Promise<Message[]> => {
+    try {
+      await waitForConnection();
       
-      try {
-         await conn.invoke<any[]>("GetPrivateMessages", toUserId);
-      } catch (err) {
-        console.error("Erro ao buscar mensagens:", err);
-        return [];
+      const conn = getConnection();
+      const userId = typeof toUserId === 'number' ? toUserId.toString() : toUserId;
+      
+      if (conn) {
+        // Limpar mensagens privadas antes de solicitar novas
+        setPrivateMessages([]);
+        await conn.invoke("GetPrivateMessages", userId);
       }
+    } catch (err) {
+      console.error("Erro ao buscar mensagens privadas:", err);
     }
     return [];
   };
 
+  const sendGroupMessage = async (toGroupId: string | number, conteudo: string): Promise<void> => {
+    try {
+      await waitForConnection();
+      
+      const conn = getConnection();
+      if (conn) {
+        const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
+        await conn.invoke("GroupMessage", groupId, conteudo);
+      }
+    } catch (err) {
+      console.error("Erro ao enviar mensagem de grupo:", err);
+    }
+  };
+
+  const getGroupMessages = async (toGroupId: string | number): Promise<void> => {
+    try {
+      await waitForConnection();
+      
+      const conn = getConnection();
+      if (conn) {
+        const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
+        // Limpar mensagens de grupo antes de solicitar novas
+        setPrivateGroupMessages([]);
+        await conn.invoke("GetGroupMessages", groupId);
+      }
+    } catch (err) {
+      console.error("Erro ao buscar mensagens de grupo:", err);
+    }
+  };
+
   return (
-    <ChatContext.Provider value={{ 
-      messages,
-      getPrivateMessage, 
-      sendPrivateMessage 
-    }}>
+    <ChatContext.Provider
+      value={{
+        messages,
+        privateMessages,
+        groupMessages,
+        privateGroupMessages,
+        sendPrivateMessage,
+        getPrivateMessage,
+        sendGroupMessage,
+        getGroupMessages,
+        clearPrivateMessages, 
+      }}
+    >
       {children}
     </ChatContext.Provider>
   );
 }
 
-export function useChat() {
+export function useChat(): ChatContextData {
   const context = useContext(ChatContext);
-  
   if (!context) {
-    throw new Error('useChat must be used within a ChatProvider');
+    throw new Error("useChat must be used within a ChatProvider");
   }
-  
   return context;
 }

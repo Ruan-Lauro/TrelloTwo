@@ -28,7 +28,7 @@ export default function ShowWorkSpaceSelect ({listWorkSpace, workplaceIds, userI
     })
 
     return(
-        <div className="w-full z-2 flex flex-col px-5 py-2 bg-white border-[#C9C9C9] border-[1px] rounded-[8px]" >
+        <div className="w-full z-2 flex flex-col px-5 py-2 bg-white border-[#C9C9C9] border-[1px] rounded-[8px] h-[100px] overflow-y-auto" >
             {listWorkSpace.length > 0 && list.length > 0?(
                 <React.Fragment>
                     {list.map(value=>(

@@ -6,7 +6,7 @@
     ColunaId: number;
     Descricao: string;
     Titulo: string;
-    DataHora: Date;
+    DataHora?: Date | null;
   };
 
   export type cardEdit = {
@@ -44,6 +44,7 @@
     addAnexCard: (formData: FormData) => Promise<string | boolean | undefined>;
     deleteAnex: (id: number) => Promise<string | boolean | undefined>;
   }
+
 
   export const useGetCard= (): Card => {
 
@@ -288,8 +289,6 @@
     }
   };
   
-  
-
 
     return { getCardId, createCard, addAnexCard, addComentCard, deleteCard, editCard, moveCard, deleteAnex}
   };

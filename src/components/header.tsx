@@ -1,11 +1,14 @@
 import { ReactSVG } from 'react-svg';
 import Search from '../components/search';
 import React, { ChangeEvent, useEffect, useState } from 'react';
+import ImgUser from './imgUser';
 
 type header = {
     name: string;
     functionSearch: (e:ChangeEvent<HTMLInputElement>)=>void;
     ShowTop: ()=>void;
+    openMenuTwo: ()=>void;
+    update: number;
 };
 
 export type userToken = {
@@ -15,19 +18,19 @@ export type userToken = {
     role: number;
 }
 
-export default function Header ({name, functionSearch, ShowTop}:header){
+export default function Header ({name, functionSearch, ShowTop, openMenuTwo, update}:header){
 
     const [seeHeader, setSeeHeader] = useState(true);
     const [userData, setUserData] = useState<userToken>();
 
     useEffect(()=>{
         const user = localStorage.getItem("user");
-        
+        console.log(update);
         if(user) {
             console.log(JSON.parse(user))
             setUserData(JSON.parse(user));
         };
-    },[])
+    },[update])
     
 
     return(
@@ -45,7 +48,7 @@ export default function Header ({name, functionSearch, ShowTop}:header){
                                 className=""
                                 src="/src/assets/svg/Group 1.svg"
                             />
-                            <h1 className='text-white text-[24px] font-bold' >{name}</h1>
+                            <h1 className='text-white text-[24px] font-bold max-w-[200px] truncate' >{name}</h1>
                         </div>
                     </div>
                     <div className='flex items-center w-[70%] sm:pl-15 justify-between max-2xl:justify-end max-2xl:gap-10 max-md:gap-3 max-sm:w-[250px] max-sm:flex-wrap' >
@@ -67,8 +70,8 @@ export default function Header ({name, functionSearch, ShowTop}:header){
                                 <p className='' >Olá,</p>
                                 <p className='truncate' >{userData.name}</p>
                             </div>
-                            <div className='relative flex items-center justify-center w-[55px] h-[55px] sm:w-[69px] sm:h-[69px] rounded-full bg-white ' >
-                                <img className='w-[38px] h-[38px] sm:w-12 sm:h-12' src={userData.photo?userData.photo:"/src/assets/img/User.png"} alt="Perfil" />
+                            <div className='relative flex items-center justify-center w-[55px] h-[55px] sm:w-[69px] sm:h-[69px] rounded-full bg-white ' onClick={openMenuTwo} >
+                                <ImgUser color='bg-4' id={0} nome={userData.name} img={userData.photo} size='w-[55px] h-[55px] sm:w-[69px] sm:h-[69px] text-[40px]' />
                                 <div className='absolute right-[-5px] sm:right-[-10px] bottom-0 flex items-center justify-center w-5 h-5 sm:w-10 sm:h-10 rounded-full bg-black' >
                                     <ReactSVG
                                         className="cursor-pointer hover:scale-105 transition-all duration-300"
