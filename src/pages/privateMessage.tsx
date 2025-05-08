@@ -69,7 +69,7 @@ function PrivateMessages() {
     }, [privateMessages, isLoading]);  
 
     useEffect(() => {
-        if (messages) {
+        if (messages && (messages.autor === currentUser?.name || messages?.autor === chatPartner?.nome)) {
             setFilteredMessages(prev => [...prev, messages]);
         }
     }, [messages]); 
