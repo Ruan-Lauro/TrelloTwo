@@ -1,14 +1,11 @@
 import axios from 'axios';
 import { api } from "../services/axios";
+import { dashboard } from '../pages/dashboard';
 
-interface DashboardData {
-  // Você pode definir a estrutura exata dos dados do dashboard aqui
-  // com base no que a API retorna
-  [key: string]: any;
-}
+
 
 interface Dashboard {
-  getDashboardData: () => Promise<DashboardData | string | undefined>;
+  getDashboardData: () => Promise<dashboard | string | undefined>;
 }
 
 export const useDashboard = (): Dashboard => {

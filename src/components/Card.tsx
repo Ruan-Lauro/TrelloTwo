@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { CardType } from '../pages/workSpace';
-import { MdOutlineStar } from "react-icons/md";
+import { MdOutlineStarBorder } from "react-icons/md";
 import { useGetCard } from '../hooks/useGetCard';
 import Tags from './tags';
 // import { CardGetId } from './showCard';
+
 
 interface CardProps {
   card: CardType;
@@ -29,6 +30,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
   });
 
   const { getCardId } = useGetCard();
+  const [width, setWidth] = useState(window.innerWidth);
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -39,10 +41,6 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
   const [formattedDate, setFormattedDate] = useState<string>('');
   const {deleteCard} = useGetCard();
   // const [inforCard, setInforCard] = useState<CardGetId>();
-
-  console.log(card);
-
-  length
 
   useEffect(() => {
     const fetchDate = async () => {
@@ -81,6 +79,9 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
     fetchDate();
   }, [card.id, getCardId]);
 
+  useEffect(()=>{
+    setWidth(window.innerWidth);
+  },[window.innerWidth])
 
   return (
     <div
@@ -95,12 +96,12 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
     >
       <div className='flex items-center justify-between'>
         <div className='flex gap-2' >
-          {card.tags.slice(0,window.innerWidth > 1012?3:1).map(val=>(
+          {card.tags.slice(0,width > 1820?3:1).map(val=>(
             <Tags color={val.cor} name={val.titulo}/>
           ))}
         </div>
-        <MdOutlineStar className='text-[30px] text-4' onClick={()=>{
-          deleteCard(card.id);
+        <MdOutlineStarBorder className='text-[30px] text-4' onClick={()=>{
+         
         }} />
       </div>
 
@@ -117,7 +118,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
               >
                 {membro.avatar ? (
                   <img 
-                    src={membro.avatar} 
+                    src={ import.meta.env.VITE_LINK_API+membro.avatar} 
                     alt={membro.nome} 
                     className="w-full h-full rounded-full object-cover"
                   />
