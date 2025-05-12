@@ -23,7 +23,7 @@ function GroupMessages() {
 
     const { groupMessages, sendGroupMessage, getGroupMessages, privateGroupMessages } = useChat();
     const { getListUserNoSearch } = useGetUser();
-    const { getGroupUsers, getAllGroups, addUserToGroup, removeUserFromGroup} = useGetGroup();
+    const { getGroupUsers, getAllGroups, addUserToGroup, removeUserFromGroup, getUserGroups} = useGetGroup();
 
     const [isLoading, setIsLoading] = useState(true);
     const [message, setMessage] = useState('');
@@ -108,13 +108,17 @@ function GroupMessages() {
         const userData = JSON.parse(userJson);
         setCurrentUser(userData);
         
-        const groups = await getAllGroups();
+
+        const groups = await getUserGroups();
+
         if (typeof groups !== 'string' && groups !== undefined) {
             const currentGroup = groups.find(g => g.id === parseInt(id));
+            console.log(groups)
+            console.log(currentGroup)
             if (currentGroup) {
                 setGroup(currentGroup);
             } else {
-                navigator('/messages');
+                navigator('/Mensagens');
                 return;
             }
         }
@@ -123,12 +127,6 @@ function GroupMessages() {
 
         if (typeof members !== 'string' && members !== undefined) {
             setGroupUsers(members);
-
-            const isUserInGroup = members.some(member => member.usuarioId === userData.id);
-            if (!isUserInGroup && userData.role !== 1) {
-                navigator('/messages');
-                return;
-            }
 
             setIsAdmin(userData.role === 1);
         }

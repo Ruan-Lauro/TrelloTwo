@@ -1,6 +1,6 @@
 import { ReactSVG } from 'react-svg';
 import Search from '../components/search';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import ImgUser from './imgUser';
 
 type header = {
@@ -8,7 +8,7 @@ type header = {
     functionSearch: (e:ChangeEvent<HTMLInputElement>)=>void;
     ShowTop: ()=>void;
     openMenuTwo: ()=>void;
-    update: number;
+    userData: userToken;
 };
 
 export type userToken = {
@@ -18,20 +18,9 @@ export type userToken = {
     role: number;
 }
 
-export default function Header ({name, functionSearch, ShowTop, openMenuTwo, update}:header){
+export default function Header ({name, functionSearch, ShowTop, openMenuTwo, userData}:header){
 
     const [seeHeader, setSeeHeader] = useState(true);
-    const [userData, setUserData] = useState<userToken>();
-
-    useEffect(()=>{
-        const user = localStorage.getItem("user");
-        console.log(update);
-        if(user) {
-            console.log(JSON.parse(user))
-            setUserData(JSON.parse(user));
-        };
-    },[update])
-    
 
     return(
         <header className={`relative w-full max-sm:justify-between flex items-center bg-6 px-7 transition-all duration-300 ${seeHeader?'h-[200px] sm:h-[130px]':'h-5'}`} >

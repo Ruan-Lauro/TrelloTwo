@@ -8,6 +8,7 @@ import { useGetUser } from "../hooks/useGetUser";
 
 type SelectMenuLeft = {
     name: string;
+    isAdmin: boolean;
 }
 
 export type workSpaceType = {
@@ -16,7 +17,7 @@ export type workSpaceType = {
     column: ColunaType[];
 };
 
-export default function SelectMenuLeft ({name}:SelectMenuLeft){
+export default function SelectMenuLeft ({name, isAdmin}:SelectMenuLeft){
 
     const [onSelected, setOnSelected] = useState(false);
     const [onButtonAdd, setOnButtonAdd] = useState(false);
@@ -111,9 +112,11 @@ export default function SelectMenuLeft ({name}:SelectMenuLeft){
                                                 <p className="max-w-[80%] truncate" onClick={()=>{
                                                     navigate(`/AreaDeTrabalho/${value.id}`);
                                                 }} >{value.nome}</p>
-                                                <p className="font-bold absolute hover:text-red-600 right-5" onClick={()=>{
-                                                    deleteWorkSpaceFunction(value.id);
-                                                }} >X</p>
+                                                {isAdmin?(
+                                                    <p className="font-bold absolute hover:text-red-600 right-5" onClick={()=>{
+                                                        deleteWorkSpaceFunction(value.id);
+                                                    }} >X</p>
+                                                ):null}
                                             </div>
                                         </React.Fragment>
                                     ))}

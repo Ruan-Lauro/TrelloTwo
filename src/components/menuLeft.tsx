@@ -7,9 +7,10 @@ import { useNavigate } from 'react-router-dom';
 type menuLeft = {
     nameLocal: string;
     ShowLeft: ()=>void;
+    isAdmin: boolean;
 };
 
-export default function MenuLeft({nameLocal, ShowLeft}:menuLeft) {
+export default function MenuLeft({nameLocal, ShowLeft, isAdmin}:menuLeft) {
 
   const [seeMenuLeft, setSeeMenuLeft] = useState(true);
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function MenuLeft({nameLocal, ShowLeft}:menuLeft) {
               namePassed={nameLocal}
               urlIcon="/src/assets/svg/Home.svg"
             />
-            <SelectMenuLeft name={nameLocal} />
+            <SelectMenuLeft name={nameLocal} isAdmin={isAdmin}/>
             <ButtonMenuLeft
               autentication={() => {
                 navigate('/Mensagens');
@@ -39,14 +40,16 @@ export default function MenuLeft({nameLocal, ShowLeft}:menuLeft) {
               namePassed={nameLocal}
               urlIcon="/src/assets/svg/icon.svg"
             />
-            <ButtonMenuLeft
-              autentication={() => {
-                navigate('/Usuarios');
-              }}
-              name={"Usuários"}
-              namePassed={nameLocal}
-              urlIcon="/src/assets/svg/Icon@2x.svg"
-            />
+            {isAdmin?(
+              <ButtonMenuLeft
+                autentication={() => {
+                  navigate('/Usuarios');
+                }}
+                name={"Usuários"}
+                namePassed={nameLocal}
+                urlIcon="/src/assets/svg/Icon@2x.svg"
+              />
+            ):null}
             
             <div className='w-full hidden max-2xl:flex justify-center' >
                 <ButtonMenuLeft
