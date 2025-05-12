@@ -1,3 +1,4 @@
+"use client"
 
 import React, { useEffect, useState } from "react";
 import LayoutPage from "../components/layoutPage";
@@ -19,6 +20,7 @@ function Messages (){
     const [update, setUpdate] = useState(false);
     const [user, setUser] = useState<userGet>();
     const { privateGroupMessages, getGroupMessages, clearPrivateMessages } = useChat();
+    const [state, setState] = useState(true);
 
     useEffect(()=>{
         const listUser = async () =>{
@@ -48,23 +50,7 @@ function Messages (){
         listGroup();
         clearPrivateMessages();
     },[update])
-    
-    const msgGroupTotal = (groupId: number) => {
-        // console.log("Quantidade")
-        // getGroupMessages(groupId);
-        // const result = localStorage.getItem("msgGroupRead"+groupId);
-
-        // if(result){
-        //     const resultJson = JSON.parse(result);
-        //     if( resultJson.length > 0 && privateGroupMessages.length > 0 && privateGroupMessages[0].grupoId === groupId){
-        //         return privateGroupMessages.length - resultJson.length;
-        //     }
-        // }else{
-        //     return privateGroupMessages.length;
-        // }
-        return 0;
-    
-    };    
+      
     
 
     return(
@@ -82,7 +68,9 @@ function Messages (){
                     <div className="w-full mt-5 h-auto max-h-[65vh] overflow-y-auto" >
                         {listUserSee.length > 0?(
                             <React.Fragment key={1} >
-                                {listUserSee.map(user=>(
+                                {listUserSee.sort((a, b) =>
+                        a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' })
+                        ).map(user=>(
                                     <div className="flex gap-3 items-center h-[70px] bg-7 hover:bg-10 rounded-[10px] mb-5 px-3 cursor-pointer" onClick={()=>{
                                         navigator(`/MensagemAoUsuario/${user.id}`)
                                     }} >
@@ -114,9 +102,7 @@ function Messages (){
                                             <ImgUser color="bg-4" nome={group.nome} img={group.foto} id={group.id} />
                                             <p className="text-[24px] font-bold truncate max-w-[200px]" >{group.nome}</p>
                                         </div>
-                                        {msgGroupTotal(group.id)?(
-                                            <div className="flex items-center justify-center w-[28px] h-[28px] rounded-full bg-2" ><p className="font-bold text-white" >{msgGroupTotal(group.id)}</p></div>
-                                        ):null}
+                                        <div className="flex items-center justify-center w-[28px] h-[28px] rounded-full bg-2" ><p className="font-bold text-white" >0</p></div>
                                         
                                     </div>
                                 ))}

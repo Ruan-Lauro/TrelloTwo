@@ -112,7 +112,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                     setTimeCard(res.time);
                     setDescription(value.descricao);
                     setNameCard(value.titulo);
-                    console.log(value.checklist)
+                    console.log(value)
                 }
             })
         }   
@@ -190,8 +190,6 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
         }   
     }
 
-    
- 
 
     return(
         <section className="fixed top-0 left-0 w-screen h-screen bg-black/50 z-[1000] flex justify-center custom-scroll-Two " >
@@ -300,7 +298,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                         </div>
                         <AddAnex CardId={card.id}  listAnex={card.anexos} update={()=>{setUpdate(!update)}}/>
                         <CheckList checklist={card.checklist} card={card} update={()=>{setUpdate(!update)}} />
-                        <CommentCard/>
+                        <CommentCard update={()=>{setUpdate(!update)}} card={card} key={card.id} />
                     </div>
                 </div>
             ):(

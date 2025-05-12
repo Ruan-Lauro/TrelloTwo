@@ -74,7 +74,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
     <div
       ref={setNodeRef}
       style={style}
-      className={`bg-white rounded-lg shadow-md flex-shrink-0 flex flex-col w-[459px] max-h-[65vh] pb-3 ${
+      className={`bg-white rounded-lg shadow-md flex-shrink-0 flex flex-col w-[220px] xl:w-[459px] max-h-[65vh] pb-3 ${
         isDragging ? 'z-10' : 'z-0'
       }`}
     >
@@ -87,25 +87,25 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
         
           {editName?(
             <div className='flex items-center' >
-              <input type="text" className='border-b-[2px] border-1 focus:outline-0 font-bold text-[24px] text-2' placeholder={name} onChange={handleName} />
-              <BsCheck className="text-[40px] text-1 cursor-pointer hover:text-8" onClick={()=>{
+              <input type="text" className='border-b-[2px] border-1 focus:outline-0 font-bold xl:text-[24px] text-2 max-xl:w-[120px]' placeholder={name} onChange={handleName} />
+              <BsCheck className="text-[20px] xl:text-[40px] text-1 cursor-pointer hover:text-8" onClick={()=>{
                   addNameColuna();
               }}  />
-              <BsX className="text-[40px] text-1 cursor-pointer hover:text-red-500" onClick={()=>{
+              <BsX className="text-[20px] xl:text-[40px] text-1 cursor-pointer hover:text-red-500" onClick={()=>{
                   setName(coluna.nome);
                   setEditName(!editColum);
               }}/>
             </div>
           ):(
             <div className='flex items-center' >
-              <h2 className="font-bold text-[24px] text-2">{name}</h2>
-            <BiSolidPencil className='text-[22px] text-2' onClick={()=>{
+              <h2 className="font-bold xl:text-[24px] text-2 truncate max-w-[100px]">{name}</h2>
+            <BiSolidPencil className='xl:text-[22px] text-2' onClick={()=>{
               setEditName(!editName);
             }} />
             </div>
           )}
 
-        <div className='flex items-center justify-center text-1 font-bold text-[30px] border-1 border-[3px] w-9 h-9 rounded-full' onClick={createCardNew} >
+        <div className='flex items-center justify-center text-1 font-bold text-[20px] xl:text-[30px] border-1 border-[3px] w-5 h-5 xl:w-9 xl:h-9 rounded-full' onClick={createCardNew} >
           <p className='mb-1' >+</p>
         </div>
       </div>

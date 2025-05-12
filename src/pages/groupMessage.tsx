@@ -48,12 +48,13 @@ function GroupMessages() {
 
         fetchData();
      
-    }, [id, update]);
+    }, []);
 
     useEffect(()=>{
         scrollToBottom();
-        if(!isLoading && privateGroupMessages){
+        if(id && privateGroupMessages && privateGroupMessages.length > 0 && privateGroupMessages[0].grupoId === parseInt(id)){
             setMessageGroup(privateGroupMessages);
+            setIsLoading(false);
         }
        
     },[privateGroupMessages])
@@ -119,7 +120,7 @@ function GroupMessages() {
         }
         
         const members = await getGroupUsers(parseInt(id));
-        console.log(members)
+
         if (typeof members !== 'string' && members !== undefined) {
             setGroupUsers(members);
 

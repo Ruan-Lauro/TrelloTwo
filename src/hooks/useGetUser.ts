@@ -29,7 +29,6 @@ export type userEdit = {
   ativo?: boolean;
 }
 
-
 export type userCreate = {
   nome: string;
   email: string;

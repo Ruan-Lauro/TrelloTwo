@@ -5,6 +5,7 @@ import { CardType } from '../pages/workSpace';
 import { MdOutlineStar } from "react-icons/md";
 import { useGetCard } from '../hooks/useGetCard';
 import Tags from './tags';
+import { CardGetId } from './showCard';
 
 interface CardProps {
   card: CardType;
@@ -37,13 +38,18 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
 
   const [formattedDate, setFormattedDate] = useState<string>('');
   const {deleteCard} = useGetCard();
+  const [inforCard, setInforCard] = useState<CardGetId>();
+
+  console.log(card);
+
+  length
 
   useEffect(() => {
     const fetchDate = async () => {
       try {
         const res = await getCardId(card.id);
         if (res && res.dataHora) {
-          console.log(res)
+          setInforCard(res);
           const inputDate = new Date(res.dataHora);
           const now = new Date();
 
@@ -89,7 +95,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
     >
       <div className='flex items-center justify-between'>
         <div className='flex gap-2' >
-          {card.tags.slice(0,3).map(val=>(
+          {card.tags.slice(0,window.innerWidth > 1012?3:1).map(val=>(
             <Tags color={val.cor} name={val.titulo}/>
           ))}
         </div>
@@ -98,7 +104,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
         }} />
       </div>
 
-      <h3 className="font-bold mb-1 text-[20px] max-h-[100px] overflow-hidden break-words max-w-[100%]">{card.titulo}</h3>
+      <h3 className="font-bold mb-1 xl:text-[20px] max-h-[100px] overflow-hidden break-words max-w-[100%]">{card.titulo}</h3>
 
       <div className='flex items-center justify-between'>
         { card && card.membersList && card.membersList.length !== undefined && card.membersList.length > 0 && (
@@ -106,7 +112,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
             {card.membersList.map((membro) => (
               <div 
                 key={membro.id} 
-                className="w-11 h-11 rounded-full bg-blue-500 flex items-center justify-center text-xs text-white"
+                className="w-8 h-8 xl:w-11 xl:h-11 rounded-full bg-blue-500 flex items-center justify-center text-xs text-white"
                 title={membro.nome}
               >
                 {membro.avatar ? (
@@ -123,11 +129,13 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
           </div>
         )}
         <div className='flex items-center'>
-          <div className='border-black border-[2px] bg-transparent w-[21px] h-[21px] rounded-full' ></div>
-          <p className='ml-2'>{formattedDate}</p>
+          <div className={`border-black border-[2px] bg-transparent w-[21px] h-[21px] rounded-full `} ></div>
+          <p className='ml-2 max-xl:text-[14px]'>{formattedDate}</p>
         </div>
       </div>
-      
+        
+        
+
     </div>
   );
 };

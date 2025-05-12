@@ -1,6 +1,7 @@
 import { FiDownload, FiTrash2 } from "react-icons/fi";
 
-const ImgAnex = ({deleteImg, dowload, listAnex, currentIndex}:{currentIndex:number; listAnex:any[]; dowload:()=>void; deleteImg:()=>void}) =>{
+const ImgAnex = ({deleteImg, dowload, listAnex, currentIndex}:{currentIndex:number; listAnex:any; dowload:()=>void; deleteImg:()=>void}) =>{
+    console.log(listAnex);
     return(
         <div className="relative w-[200px] p-4 flex flex-col items-center gap-3">
             <img

@@ -419,12 +419,12 @@ const WorkSpace = () => {
   return (
     <LayoutPage name={WorkSpace?.nome!} loadingValue={loading}>
        
-        <div className="p-6 bg-gray-100 h-[100%]">
-            <div className='flex items-center justify-between mb-5' >
-              <h2 className="text-2xl text-[#003057] font-bold truncate w-[60%] ">Área de Trabalho - {WorkSpace?.nome!}</h2>
+        <div className="p-6 bg-gray-100 h-[100%] min-w-[350px]">
+            <div className='max-xl:flex-col flex items-center justify-between mb-5' >
+              <h2 className="max-xl:text-center text-[20px] break-words xl:text-2xl text-[#003057] font-bold xl:truncate w-[60%] ">Área de Trabalho - {WorkSpace?.nome!}</h2>
               <div className='flex gap-2 items-center hover:scale-105 transition-all duration-300 cursor-pointer' onClick={createColumnNew} >
                 <p className='text-11 font-bold' >Adicionar Coluna</p>
-                <div className='flex items-center justify-center text-1 font-bold text-[30px] border-1 border-[3px] w-9 h-9 rounded-full' >
+                <div className='flex items-center justify-center text-1 font-bold text-[20px] xl:text-[30px] border-1 border-[3px] w-6 h-6 xl:w-9 xl:h-9 rounded-full' >
                 <p className='mb-1' >+</p>
                 </div>
               </div>

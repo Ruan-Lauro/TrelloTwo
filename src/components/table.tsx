@@ -201,7 +201,9 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
                 <td colSpan={5} className="text-center py-4">Nenhum usuário encontrado</td>
               </tr>
             ) : (
-              users.map((user, index) => (
+              users.sort((a, b) =>
+                a.nome.localeCompare(b.nome, 'pt', { sensitivity: 'base' })
+                ).map((user, index) => (
                 <tr 
                   key={user.id} 
                   className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}

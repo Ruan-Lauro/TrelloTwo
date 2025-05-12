@@ -4,6 +4,7 @@ import {BsCheck, BsX} from 'react-icons/bs';
 import { useGetWorkSpace } from "../hooks/useGetWorkSpace";
 import { useNavigate } from "react-router-dom";
 import { ColunaType } from "../pages/workSpace";
+import { useGetUser } from "../hooks/useGetUser";
 
 type SelectMenuLeft = {
     name: string;
@@ -22,6 +23,7 @@ export default function SelectMenuLeft ({name}:SelectMenuLeft){
     const [newArea, setNewArea] = useState('');
     const [showList, setShowList] = useState<workSpaceType[]>([]);
     const {getWorkSpace, postWorkSpace, deleteWorkSpace} = useGetWorkSpace();
+    const {getListUserNoSearch} = useGetUser();
     const [update, setUpdate] = useState(false);
     const navigate = useNavigate();
 
@@ -29,14 +31,31 @@ export default function SelectMenuLeft ({name}:SelectMenuLeft){
         getListWorkSpace();
     },[update])
 
-    const getListWorkSpace = async () =>{
-        
+    const getListWorkSpace = async () => {
         const listWorkSpace = await getWorkSpace();
-            if(listWorkSpace.length !== 0){
-                console.log(listWorkSpace)
-                setShowList(listWorkSpace);
-            }
+        
+        if (listWorkSpace.length !== 0) {
+            const user = localStorage.getItem("user");
+            if (!user) return;
+    
+            const userData = JSON.parse(user);
+            const listUsers = await getListUserNoSearch();
+            if(!listUsers) return;
+            const result = listUsers.items.find((val: { nome: any; }) => val.nome === userData.name);
+            if (!result) return;
+    
+            const userWorkplacesIds = result.workplacesIds || [];
+    
+            const filteredWorkspaces = listWorkSpace.filter(ws =>
+                userWorkplacesIds.includes(ws.id)
+            );
+
+            console.log(filteredWorkspaces)
+    
+            setShowList(filteredWorkspaces);
+        }
     };
+    
 
     const handleNewArea = (e: ChangeEvent<HTMLInputElement>) => {
             setNewArea(e.currentTarget.value);
@@ -80,25 +99,27 @@ export default function SelectMenuLeft ({name}:SelectMenuLeft){
                             src="/src/assets/svg/play_arrow_filled@2x.svg"
                         />
                     </div>
-                    <div className="w-full flex flex-col items-center bg-3 rounded-[8px] pb-3 pt-5 gap-1">
-                        {showList.length > 0?(
-                            <React.Fragment>
-                                {showList.map(value=>(
-                                    <React.Fragment>
-                                        <div className={`relative w-[90%] h-[33px] rounded-[6px] text-white flex justify-center items-center  cursor-pointer ${value.nome === name?"bg-4":"hover:bg-6 bg-2"} `} onClick={()=>{
-                                                navigate(`/AreaDeTrabalho/${value.id}`);
-                                            }} >
-                                            <p className="max-w-[80%] truncate" onClick={()=>{
-                                                navigate(`/AreaDeTrabalho/${value.id}`);
-                                            }} >{value.nome}</p>
-                                            <p className="font-bold absolute hover:text-red-600 right-5" onClick={()=>{
-                                                deleteWorkSpaceFunction(value.id);
-                                            }} >X</p>
-                                        </div>
-                                    </React.Fragment>
-                                ))}
-                            </React.Fragment>
-                        ):null}
+                    <div className="w-full h-auto flex flex-col items-center bg-3 rounded-[8px] pb-3 pt-5 gap-1">
+                        <div className="flex flex-col h-auto gap-2 w-full max-h-[220px] overflow-y-auto items-center custom-scroll-Two z-10" >
+                            {showList.length > 0?(
+                                <React.Fragment>
+                                    {showList.map(value=>(
+                                        <React.Fragment>
+                                            <div className={`relative w-[90%] h-[33px] rounded-[6px] text-white flex justify-center items-center  cursor-pointer ${value.nome === name?"bg-4":"hover:bg-6 bg-2"} `} onClick={()=>{
+                                                    navigate(`/AreaDeTrabalho/${value.id}`);
+                                                }} >
+                                                <p className="max-w-[80%] truncate" onClick={()=>{
+                                                    navigate(`/AreaDeTrabalho/${value.id}`);
+                                                }} >{value.nome}</p>
+                                                <p className="font-bold absolute hover:text-red-600 right-5" onClick={()=>{
+                                                    deleteWorkSpaceFunction(value.id);
+                                                }} >X</p>
+                                            </div>
+                                        </React.Fragment>
+                                    ))}
+                                </React.Fragment>
+                            ):null}
+                        </div>
                         {onButtonAdd?(
                             <div className="flex w-[90%] h-[33px] rounded-[6px] text-white" >
                                 <input type="text" className="rounded-[6px] w-full h-full flex justify-center items-center cursor-pointer hover:bg-6 bg-2 focus:outline-0 text-center" placeholder="Adicione o nome" value={newArea} onChange={handleNewArea} ></input>
