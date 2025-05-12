@@ -58,6 +58,8 @@ function AddUser (){
             const res = await createUser(user);
             if(typeof res === "boolean" && res){
                 alert("Usuário Criado")
+            }else{
+                setErro("Erro ao criar")
             }
         }
     }

@@ -1,6 +1,7 @@
 import { Calendar, Clock } from "lucide-react";
 import { ChangeEvent, useRef } from "react";
-import AcceptAndClose from "./AcceptAndClose";
+import AcceptAndClose from "./acceptAndClose";
+
 
 
 type dateTime = {

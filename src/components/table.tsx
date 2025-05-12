@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight, Pencil, Trash } from 'lucide-react';
-import { useGetUser, userGet } from '../hooks/useGetUser';
+import { useGetUser } from '../hooks/useGetUser';
 import { useGetWorkSpace } from '../hooks/useGetWorkSpace';
 import { workSpaceType } from './selectMenuLeft';
 import RenderWorkSpace from './renderWorkSpace';
@@ -39,10 +39,10 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
   const [users, setUsers] = useState<Usuario[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [totalItems, setTotalItems] = useState<number>(0);
+  // const [totalItems, setTotalItems] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const {getListUser, deleteUser } = useGetUser();
-  const {getWorkSpace, addUserWorkSpace} = useGetWorkSpace();
+  const {getWorkSpace} = useGetWorkSpace();
   const [listWorkSpace, setListWorkSpace] = useState<workSpaceType[]>([]);
   const [openWorkSpaceIds, setOpenWorkSpaceIds] = useState<number[]>([]);
   const [update, setUpdate] = useState(false);
@@ -65,7 +65,7 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
         console.log("API not respecting PageMax, using client-side pagination");
         
         const allUsers = data.items;
-        setTotalItems(allUsers.length);
+        // setTotalItems(allUsers.length);
         
         const calculatedTotalPages = Math.ceil(allUsers.length / pageSize);
         setTotalPages(calculatedTotalPages);
@@ -76,7 +76,7 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
       } else {
         setUsers(data.items);
         setTotalPages(data.totalPages);
-        setTotalItems(data.totalItems);
+        // setTotalItems(data.totalItems);
       }
     } catch (error) {
       console.error('Erro ao buscar usuários:', error);
@@ -168,9 +168,9 @@ const UserTable: React.FC<UserTableProps> = ({ pageSize, search }) => {
     );
   };
 
-  const getDefaultAvatar = (nome: string) => {
-    return nome.charAt(0).toUpperCase();
-  };
+  // const getDefaultAvatar = (nome: string) => {
+  //   return nome.charAt(0).toUpperCase();
+  // };
 
   const toggleWorkSpace = (id: number) => {
     setOpenWorkSpaceIds((prev) =>

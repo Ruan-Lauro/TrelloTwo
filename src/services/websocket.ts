@@ -78,7 +78,7 @@ export const registerListener = <T extends any[]>(eventName: string, callback: (
 
 const reregisterAllListeners = (): void => {
   if (!connection) return;
-  
+  // @ts-ignore
   connection.off();
   
   listeners.forEach(({ eventName, callback }) => {

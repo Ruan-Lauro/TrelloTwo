@@ -1,5 +1,4 @@
 import LayoutPage from "../components/layoutPage";
-import LoadingAnimation from "../components/loading";
 import WaveHeader from "../components/teste";
 
 

@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { createTag, useGetTag } from "../hooks/useGetTag";
+import { useGetTag } from "../hooks/useGetTag";
 import { Tag } from "./showCard";
 import React from "react";
 import { IoMdCheckmark } from "react-icons/io";

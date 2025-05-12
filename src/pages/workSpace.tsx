@@ -22,7 +22,6 @@ import { useParams } from 'react-router-dom';
 import { useGetWorkSpace } from '../hooks/useGetWorkSpace';
 import { useGetColumn } from '../hooks/useGetColunm';
 import { useGetCard } from '../hooks/useGetCard';
-import LoadingAnimation from '../components/loading';
 import ShowCard, { Tag } from '../components/showCard';
 
 // Definição dos tipos

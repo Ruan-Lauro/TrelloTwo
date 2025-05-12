@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { Comentario, CardGetId } from "./showCard";
 import { BsX, BsCheck } from "react-icons/bs";
 import { GoPaperclip } from "react-icons/go";
@@ -20,6 +20,7 @@ const CommentCard = ({ card, update }: CommentCardProps) => {
   const fileInputRef = useRef(null);
 
   const handleAttachClick = () => {
+    // @ts-ignore
     fileInputRef.current?.click(); 
   };
 

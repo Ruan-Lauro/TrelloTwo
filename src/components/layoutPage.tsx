@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState, useEffect } from "react";
 import Header from "../components/header";
 import MenuLeft from "../components/menuLeft";
 import Footer from "./footer";
@@ -21,12 +21,13 @@ function LayoutPage ({name, children, loadingValue, updateHeader}:LayoutPageType
     const [loading, setLoading] = useState(loadingValue);
     const [openTwoMenu, setOpenTwoMenu] = useState(false);
 
-    // useEffect(()=>{
-    //     setLoading(loadingValue)
-    // }, [loadingValue])
+    useEffect(()=>{
+        setLoading(loadingValue)
+    }, [loadingValue])
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         setSearch(e.currentTarget.value);
+        console.log(search)
     };
 
     return(

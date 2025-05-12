@@ -5,7 +5,7 @@ import { CardType } from '../pages/workSpace';
 import { MdOutlineStar } from "react-icons/md";
 import { useGetCard } from '../hooks/useGetCard';
 import Tags from './tags';
-import { CardGetId } from './showCard';
+// import { CardGetId } from './showCard';
 
 interface CardProps {
   card: CardType;
@@ -38,7 +38,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
 
   const [formattedDate, setFormattedDate] = useState<string>('');
   const {deleteCard} = useGetCard();
-  const [inforCard, setInforCard] = useState<CardGetId>();
+  // const [inforCard, setInforCard] = useState<CardGetId>();
 
   console.log(card);
 
@@ -49,7 +49,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
       try {
         const res = await getCardId(card.id);
         if (res && res.dataHora) {
-          setInforCard(res);
+          // setInforCard(res);
           const inputDate = new Date(res.dataHora);
           const now = new Date();
 

@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import { useAuthLogin } from '../hooks/useAuthLogin';
 import { useAuthToken } from '../hooks/useAuthToken';
 import { useGetUser } from '../hooks/useGetUser';
-import { useGetCard } from '../hooks/useGetCard';
 
 
 
@@ -18,7 +17,7 @@ function Login() {
   const [erro, setErro] = useState("");
   const navigate = useNavigate();
   const {authenticationLogin} = useAuthLogin();
-  const {editCard} = useGetCard();
+  // const {editCard} = useGetCard();
   const {authenticationT} = useAuthToken();
   const {getUser} = useGetUser();
 
@@ -36,6 +35,7 @@ function Login() {
     if(token && token !== ""){
       const resToken = authenticationT(token);
       resToken.then(value=>{
+        console.log(value)
         // if(value){
         //   navigate("/Dashboard")
         // }

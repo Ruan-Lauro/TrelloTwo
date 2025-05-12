@@ -2,8 +2,8 @@ import { CardGetId, Check } from "./showCard";
 import React, { useState } from "react";
 import DateTime from "./dateTime";
 
-import { Membro } from "./showCard";
-import AcceptAndClose from "./AcceptAndClose";
+// import { Membro } from "./showCard";
+import AcceptAndClose from "./acceptAndClose";
 import { useGetChecklistCard } from "../hooks/useGetCheckList";
 import ShowItemChecklist from "./showItemChecklist";
 import { createDateLocal } from "../functions/checklist";

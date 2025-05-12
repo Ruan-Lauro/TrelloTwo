@@ -1,5 +1,5 @@
 import { GroupUser } from "../hooks/useGetGroup";
-import { user, userGet } from "../hooks/useGetUser";
+import { user } from "../hooks/useGetUser";
 import ImgUser from "./imgUser";
 
 type listUser = {

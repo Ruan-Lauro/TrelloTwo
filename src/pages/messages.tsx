@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import LayoutPage from "../components/layoutPage";
 import { useGetUser, userGet } from "../hooks/useGetUser";
 import { useNavigate } from "react-router-dom";
-import { Group, GroupUser, useGetGroup } from "../hooks/useGetGroup";
+import { Group, useGetGroup } from "../hooks/useGetGroup";
 import ImgUser from "../components/imgUser";
 import CreateGroupModal from "../components/createGroupModal";
 import { useChat } from "../contexts/contextChat";
@@ -19,8 +19,8 @@ function Messages (){
     const [showCreateGroup, setShowCreateGroup] = useState(false);
     const [update, setUpdate] = useState(false);
     const [user, setUser] = useState<userGet>();
-    const { privateGroupMessages, getGroupMessages, clearPrivateMessages } = useChat();
-    const [state, setState] = useState(true);
+    const { clearPrivateMessages } = useChat();
+    // const [state, setState] = useState(true);
 
     useEffect(()=>{
         const listUser = async () =>{

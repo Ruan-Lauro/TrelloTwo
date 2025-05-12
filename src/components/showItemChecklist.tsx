@@ -1,11 +1,11 @@
 import BoxCheck from "./boxCheck";
 import ImgUser from "./imgUser";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { Check, Membro } from "./showCard";
+import { Check } from "./showCard";
 import DateChecklist from "./dateChecklist";
 import { useState } from "react";
 import DateTime from "./dateTime";
-import AcceptAndClose from "./AcceptAndClose";
+import AcceptAndClose from "./acceptAndClose";
 import ButtonAnimationMore from "./buttonAnimationMore";
 import { createDateLocal, transfDateTime } from "../functions/checklist";
 import AddMemberCheckList from "./addMemberCheckList";
