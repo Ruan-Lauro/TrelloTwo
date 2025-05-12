@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useGetGroup, Group, GroupUser } from '../hooks/useGetGroup';
 import { useNavigate } from 'react-router-dom';
-import ListUser from './listUser';
 import { user } from '../hooks/useGetUser';
 import ImgUser from './imgUser';
 

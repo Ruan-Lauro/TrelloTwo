@@ -23,7 +23,7 @@ function GroupMessages() {
 
     const { groupMessages, sendGroupMessage, getGroupMessages, privateGroupMessages } = useChat();
     const { getListUserNoSearch } = useGetUser();
-    const { getGroupUsers, getAllGroups, addUserToGroup, removeUserFromGroup, getUserGroups} = useGetGroup();
+    const { getGroupUsers, addUserToGroup, removeUserFromGroup, getUserGroups} = useGetGroup();
 
     const [isLoading, setIsLoading] = useState(true);
     const [message, setMessage] = useState('');
