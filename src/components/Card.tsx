@@ -39,7 +39,7 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
   };
 
   const [formattedDate, setFormattedDate] = useState<string>('');
-  const {deleteCard} = useGetCard();
+  // const {deleteCard} = useGetCard();
   // const [inforCard, setInforCard] = useState<CardGetId>();
 
   useEffect(() => {
