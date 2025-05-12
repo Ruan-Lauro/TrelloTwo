@@ -194,9 +194,9 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
     return(
         <section className="fixed top-0 left-0 w-screen h-screen bg-black/50 z-[1000] flex justify-center custom-scroll-Two " >
             {card?(
-                <div className="w-[879px] h-[1251px] relative bg-[#00447B]/70 rounded-[40px] mt-5 backdrop-blur pl-10 pr-10 max-h-[95vh]" >
+                <div className="w-full h-full lg:w-[879px] relative bg-[#00447B]/70 lg:rounded-[40px] lg:mt-5 backdrop-blur px-5 lg:px-10 lg:max-h-[95vh] lg:pb-10" >
                     {editCardInfor?(
-                        <div className="text-white items-center flex pt-12 pb-3 gap-2 " >
+                        <div className="text-white items-center flex pt-12 pb-5 gap-2 " >
                             <input type="text" value={nameCard} className=" max-w-[200px] bg-transparent border-b-white border-b-[2px] text-[32px] font-bold mt-[-10px] focus:outline-0" onChange={handleNameCard} />
                             <BsCheck className="text-[40px] cursor-pointer hover:text-8" onClick={()=>{
                                 editNameCardNew();
@@ -214,20 +214,20 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                             }} />
                         </div>
                     ):(
-                        <div className="text-white flex pt-12 gap-5 pb-3 " >
+                        <div className="text-white flex pt-12 gap-5 pb-5 " >
                             <Status card={card} />
                             <div className="flex flex-col" >
-                                <p className="text-[32px] font-bold mt-[-10px] max-w-[200px] truncate" >{nameCard}</p>
+                                <p className="text-[24px] sm:text-[32px] font-bold mt-[-10px] max-w-[200px] truncate" >{nameCard}</p>
                                 <p >em {nameColumn}</p>
                             </div>
                             <BiSolidPencil className='text-[32px] text-white cursor-pointer hover:text-white/80 hover:scale-105 transition-all duration-300' onClick={()=>{
-                                    setEditCardInfor(true);
+                                setEditCardInfor(true);
                             }} />
                         </div>
                         )}
-                    <div onClick={closeCard} className="absolute top-7 right-7 flex items-center justify-center w-[43px] h-[43px] rounded-full bg-white font-bold text-black text-[32px] cursor-pointer hover:text-4" ><p >X</p></div>
-                    <div className="flex flex-col h-[85%] overflow-y-auto pr-2" >
-                        <div className="flex text-white mt-7 gap-20" >
+                    <div onClick={closeCard} className="absolute top-3 right-3 sm:top-7 sm:right-7 flex items-center justify-center w-8 h-8 text-[20px] sm:w-[43px] sm:h-[43px] rounded-full bg-white font-bold text-black sm:text-[32px] cursor-pointer hover:text-4" ><p >X</p></div>
+                    <div className="flex flex-col h-[85%] overflow-y-auto pr-2 " >
+                        <div className="flex max-lg:flex-col text-white mt-7 lg:gap-20 gap-10" >
                             <div className="flex flex-col" >
                                 <p>Membros</p>
                                 <div className="flex gap-5 mt-1" >
@@ -278,11 +278,11 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                         {showListTags?(
                             <AddTags cardListTag={card.tags} update={()=>{setUpdate(!update)}} cardId={card.id} />
                         ):null}
-                        <div className="flex flex-col mt-10" >
+                        <div className="flex flex-col mt-10 max-sm:mb-10" >
                             <p className="font-bold text-white text-[24px]" >Descrição</p>
-                            <textarea name="description" id="description" value={description} onChange={handleDescription} className="mt-5 focus:outline-0 focus:bg-2/50 text-white h-[100px] max-h-[100px] focus:pl-3 focus:px-3" ></textarea>
+                            <textarea name="description" id="description" value={description} onChange={handleDescription} className="mt-5 mb-3 focus:outline-0 focus:bg-2/50 text-white h-[100px] max-h-[100px] focus:pl-3 focus:px-3" ></textarea>
                             {description !== card.descricao?(
-                                <div className="flex mt-1 gap-5 text-white items-center" >
+                                <div className="flex mt-1 gap-5 text-white items-center mb-5" >
                                     <div className="flex gap-2 items-center cursor-pointer hover:scale-105 transition-all duration-300" onClick={editDescription} >
                                         <CiPen className="text-[27px]" />
                                         <p>Editar</p>

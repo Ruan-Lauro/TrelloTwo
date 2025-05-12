@@ -102,12 +102,11 @@ const CommentCard = ({ card, update }: CommentCardProps) => {
 
   return (
     <div className="flex flex-col justify-between mt-10 text-white w-full">
-      <p className="font-bold text-[24px] mb-5">Comentários</p>
+      <p className="font-bold text-[24px] mb-10 sm:mb-5">Comentários</p>
 
-        {/* Comment input */}
-      <div className="flex flex-col h-auto">
+      <div className="flex flex-col h-auto max-sm:mb-10">
             {anexo?(
-              <div className="flex" >
+              <div className="flex max-sm:self-center" >
                   <img className="w-[250px] h-[250px] object-cover mb-5" src={URL.createObjectURL(anexo)} alt={anexo.name} />
                   <BsX
                       className="ml-2 text-[20px] cursor-pointer hover:text-red-500"
@@ -150,15 +149,14 @@ const CommentCard = ({ card, update }: CommentCardProps) => {
             </div>
         </div>
 
-      {/* Comment list */}
-      <div className="flex flex-col gap-4 mb-6 ">
+      <div className="flex flex-col gap-10 sm:gap-4 mb-6 ">
         {card?.comentarios && card.comentarios.length > 0 ? (
           card.comentarios.map((comentario) => (
             <div key={comentario.id} className="flex gap-3 max-w-full">
               <div className="flex-shrink-0">
                 <ImgUser id={0} img={comentario.foto} nome={comentario.usuario} color="bg-4" />
               </div>
-              <div className="flex flex-col max-w-[90%]">
+              <div className="flex flex-col max-w-[80%] sm:max-w-[90%]">
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <div className="flex items-center">

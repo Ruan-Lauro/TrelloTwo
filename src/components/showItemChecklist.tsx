@@ -55,7 +55,7 @@ const ShowItemChecklist = ({val, clickBox, removeChecklist, update}:showItemChec
     return(
         <div className="flex flex-col items-start" >
             {editCheckList?(
-                <div className="flex items-center gap-3" >
+                <div className="flex max-sm:flex-wrap max-sm:justify-center items-center sm:gap-3 gap-5" >
                     <input type="text" placeholder="Adicionar Descrição" className="border-b-white border-b-[2px] focus:outline-0" onChange={handleDescriptionCheck} value={descriptioCheck} />
                     <DateTime add={()=>{}} close={()=>{}} dateCard={dateCard} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} timeCard={timeCard} trueEditCard={false} />
                     <AcceptAndClose add={EditCheckList} close={()=>{setEditCheckList(false)}} />
@@ -75,7 +75,7 @@ const ShowItemChecklist = ({val, clickBox, removeChecklist, update}:showItemChec
                     )}
                 </div>
             ):(
-                <div className="flex items-center justify-between w-full" >
+                <div className="flex  items-center justify-between w-full" >
                     <div className="flex items-center gap-3" >  
                         <BoxCheck value={val.concluido} click={clickBox} />
                         <p className={`${val.concluido?"line-through":""} max-w-[500px] break-words overflow-y-auto max-h-[80px]`} >{val.descricao}</p>

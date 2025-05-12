@@ -85,7 +85,7 @@ const CheckList = ({checklist, card, update}:checkList) => {
             </div>
             <div className="flex flex-col w-full" >
                 {trueAddCheckList?(
-                    <div className="flex items-center gap-3" >
+                    <div className="flex max-sm:flex-wrap items-center gap-3 max-sm:mt-5  max-sm:justify-center max-sm:bg-3/40" >
                         <input type="text" placeholder="Adicionar Descrição" className="border-b-white border-b-[2px] focus:outline-0" onChange={handleDescriptionCheck} value={descriptioCheck} />
                         <DateTime add={()=>{}} close={()=>{}} dateCard={dateCard} handleDateChange={handleDateChange} handleTimeChange={handleTimeChange} timeCard={timeCard} trueEditCard={false} />
                         <AcceptAndClose add={addItemCheckList} close={()=>{setTrueAddCheckList(false)}} />
