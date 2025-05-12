@@ -25,9 +25,11 @@ export default function EditProfile() {
 
     useEffect(() => {
         const fetchUserData = async () => {
+              const token = localStorage.getItem("token");
             try {
+                if(!token) return;
                 setLoading(true);
-                const data = await getUser();
+                const data = await getUser(token);
 
                 if (typeof data === "string") {
                     setError(data);
