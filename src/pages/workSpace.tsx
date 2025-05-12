@@ -55,7 +55,6 @@ export type WorkSpaceNew = {
 }
 
 const WorkSpace = () => {
-  // Estado para controlar o item que está sendo arrastado
   const [activeId, setActiveId] = useState<string | null>(null);
   const [activeType, setActiveType] = useState<'card' | 'coluna' | null>(null);
   const [WorkSpace, setWorkSpace] = useState<WorkSpaceNew>();
@@ -65,8 +64,10 @@ const WorkSpace = () => {
   const {moveCard} = useGetCard();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [click, setClick] = useState(false);
+  const [idCard, setIdCard] = useState<number>();
+  const [columnName, setColumnName] = useState("");
   
-  // Estado inicial com as colunas e cards
   const [colunas, setColunas] = useState<ColunaType[]>([]);
 
   useEffect(()=>{
@@ -89,8 +90,6 @@ const WorkSpace = () => {
     }
   },[update, id]);
 
-
-  // Configurar sensores para detecção de eventos de arrastar
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -99,7 +98,6 @@ const WorkSpace = () => {
     })
   );
 
-  // Manipulador para quando começa a arrastar um item
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const id = active.id.toString();
@@ -114,7 +112,6 @@ const WorkSpace = () => {
     }
   }, []);
 
-  // Manipulador para quando termina de arrastar um item
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
     
@@ -126,7 +123,6 @@ const WorkSpace = () => {
 
     setLoading(true);
 
-    // Se estamos arrastando uma coluna
     if (activeType === 'coluna' && over.id.toString().includes('coluna-')) {
       const activeColumnId = parseInt(active.id.toString().replace('coluna-', ''));
       const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
@@ -138,7 +134,6 @@ const WorkSpace = () => {
           
           const reordered = arrayMove(prevColunas, oldIndex, newIndex);
           
-          // Atualizar a ordem das colunas
           const updatedColumns = reordered.map((col, index) => ({
             ...col,
             order: index,
@@ -164,30 +159,25 @@ const WorkSpace = () => {
       }
     }
     
-    // Limpar o estado ativo
     setActiveId(null);
     setActiveType(null);
     setLoading(false);
   }, [activeType]);
 
-  // Manipulador para quando um item está sendo arrastado sobre outro
   const handleDragOver = useCallback((event: DragOverEvent) => {
     const { active, over } = event;
     
     if (!over) return;
     
-    // Se estamos arrastando um card
     if (activeType === 'card') {
       const activeCardId = parseInt(active.id.toString().replace('card-', ''));
       
-      // Se estamos arrastando sobre outro card
       if (over.id.toString().includes('card-')) {
 
         const overCardId = parseInt(over.id.toString().replace('card-', ''));
         
         if (activeCardId !== overCardId) {
           setColunas((prevColunas) => {
-            // Encontrar as colunas que contêm os cards
             let activeColumnIndex = -1;
             let activeCardIndex = -1;
             let overColumnIndex = -1;
@@ -208,7 +198,6 @@ const WorkSpace = () => {
               }
             });
             
-            // Se ambos os cards estão na mesma coluna, apenas reordene
             if (activeColumnIndex === overColumnIndex) {
               console.log("Se ambos os cards estão na mesma coluna, apenas reordene")
               const newCards = arrayMove(
@@ -217,7 +206,6 @@ const WorkSpace = () => {
                 overCardIndex
               );
               
-              // Atualizar a ordem dos cards
               const updatedCards = newCards.map((card, index) => ({
                 ...card,
                 order: index,
@@ -245,24 +233,19 @@ const WorkSpace = () => {
               
               return updatedColunas;
             } 
-            // Se os cards estão em colunas diferentes, mova o card para a nova coluna
             else {
               console.log("Se os cards estão em colunas diferentes, mova o card para a nova coluna")
               const updatedColunas = [...prevColunas];
               
-              // Remover o card da coluna original
               const [movedCard] = updatedColunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
               
-              // Atualizar a ordem dos cards na coluna original
               updatedColunas[activeColumnIndex].cards = updatedColunas[activeColumnIndex].cards.map((card, index) => ({
                 ...card,
                 order: index,
               }));
               
-              // Adicionar o card à nova coluna na posição correta
               updatedColunas[overColumnIndex].cards.splice(overCardIndex, 0, movedCard);
               
-              // Atualizar a ordem dos cards na nova coluna
               updatedColunas[overColumnIndex].cards = updatedColunas[overColumnIndex].cards.map((card, index) => ({
                 ...card,
                 order: index,
@@ -285,7 +268,6 @@ const WorkSpace = () => {
           });
         }
       } 
-      // Se estamos arrastando sobre uma coluna (para adicionar o card ao final da coluna)
       else if (over.id.toString().includes('coluna-')) {
         console.log("Se estamos arrastando sobre uma coluna (para adicionar o card ao final da coluna)")
         const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
@@ -308,23 +290,19 @@ const WorkSpace = () => {
             }
           });
           
-          // Se o card já está na coluna destino, não fazer nada
           if (activeColumnIndex === overColumnIndex) {
             return prevColunas;
           }
           
           const updatedColunas = [...prevColunas];
           
-          // Remover o card da coluna original
           const [movedCard] = updatedColunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
           
-          // Atualizar a ordem dos cards na coluna original
           updatedColunas[activeColumnIndex].cards = updatedColunas[activeColumnIndex].cards.map((card, index) => ({
             ...card,
             order: index,
           }));
           
-          // Adicionar o card ao final da nova coluna
           updatedColunas[overColumnIndex].cards.push({
             ...movedCard,
             order: updatedColunas[overColumnIndex].cards.length,
@@ -352,7 +330,6 @@ const WorkSpace = () => {
     }
   }, [activeType]);
 
-  // Encontrar o item ativo sendo arrastado
   const getActiveItem = useCallback(() => {
     if (!activeId || !activeType) return null;
     
@@ -387,7 +364,6 @@ const WorkSpace = () => {
     return null;
   }, [activeId, activeType, colunas]);
 
-  // Ordenar colunas pela propriedade 'order'
   const sortedColunas = [...colunas].sort((a, b) => a.order - b.order);
   console.log(sortedColunas)
 
@@ -402,10 +378,6 @@ const WorkSpace = () => {
       });
     }
   };
-
-  const [click, setClick] = useState(false);
-  const [idCard, setIdCard] = useState<number>();
-  const [columnName, setColumnName] = useState("");
 
   const showCardInfor = (number: number, show: boolean, nameColumn:string) =>{
     if(show){
@@ -458,7 +430,7 @@ const WorkSpace = () => {
         {click && idCard?(
         <ShowCard id={idCard} nameColumn={columnName} closeCard={()=>{
           setClick(false);
-        }} />
+        }} updateN={()=>{setUpdate(!update)}} />
       ):null}
     </LayoutPage>
   );

@@ -59,7 +59,7 @@ export type CardGetId = {
     anexos: string[];
 };
 
-export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameColumn: string, closeCard: ()=>void}) {
+export default function ShowCard ({id, nameColumn, closeCard, updateN}:{id: number, nameColumn: string, closeCard: ()=>void, updateN: ()=>void}) {
 
     //hook Card
     const {getCardId, editCard, deleteCard} = useGetCard();
@@ -141,6 +141,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                 if(typeof val === "boolean" && val){
                     setTrueEditCard(false);
                     setUpdate(!update);
+                    updateN();
                 }
             })
         }
@@ -173,6 +174,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
             res.then(val=>{
                 if(typeof val === "boolean" && val){
                     setUpdate(!update);
+                    updateN();
                 }
             })
         };
@@ -185,6 +187,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                 if(typeof val === "boolean" && val){
                     setUpdate(!update);
                     setEditCardInfor(false);
+                    updateN();
                 }
             })
         }   
@@ -208,6 +211,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                                 const res = deleteCard(card.id);
                                 res.then(val=>{
                                     if(typeof val === "boolean" && val){
+                                        updateN();
                                         closeCard();
                                     }
                                 })
@@ -227,7 +231,7 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                         )}
                     <div onClick={closeCard} className="absolute top-3 right-3 sm:top-7 sm:right-7 flex items-center justify-center w-8 h-8 text-[20px] sm:w-[43px] sm:h-[43px] rounded-full bg-white font-bold text-black sm:text-[32px] cursor-pointer hover:text-4" ><p >X</p></div>
                     <div className="flex flex-col h-[85%] overflow-y-auto pr-2 " >
-                        <div className="flex max-lg:flex-col text-white mt-7 lg:gap-20 gap-10" >
+                        <div className="flex max-lg:flex-col text-white mt-7 lg:gap-15 gap-10" >
                             <div className="flex flex-col" >
                                 <p>Membros</p>
                                 <div className="flex gap-5 mt-1" >
@@ -276,7 +280,10 @@ export default function ShowCard ({id, nameColumn, closeCard}:{id: number, nameC
                             <AddMember card={card} />
                         ):null}
                         {showListTags?(
-                            <AddTags cardListTag={card.tags} update={()=>{setUpdate(!update)}} cardId={card.id} />
+                            <AddTags cardListTag={card.tags} update={()=>{
+                                setUpdate(!update)
+                                updateN();
+                            }} cardId={card.id} />
                         ):null}
                         <div className="flex flex-col mt-10 max-sm:mb-10" >
                             <p className="font-bold text-white text-[24px]" >Descrição</p>
