@@ -71,7 +71,7 @@ function Login() {
 
   return (
     <main className="w-full h-svh bg-9 flex items-center justify-center">
-      <section className='w-[482px] h-[512px] bg-1 rounded-[10px] flex flex-col items-center' >
+      <section className='w-full h-full sm:w-[482px] sm:h-[512px] bg-1 sm:rounded-[10px] flex flex-col items-center max-sm:justify-center' >
         <ReactSVG
           className="mt-10"
           src="/src/assets/svg/image 1.svg"
