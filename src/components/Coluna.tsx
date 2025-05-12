@@ -98,7 +98,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
             </div>
           ):(
             <div className='flex items-center' >
-              <h2 className="font-bold xl:text-[24px] text-2 truncate max-w-[100px]">{name}</h2>
+              <h2 className="font-bold xl:text-[24px] text-2 truncate max-sm:max-w-[100px] max-w-[300px]">{name}</h2>
             <BiSolidPencil className='xl:text-[22px] text-2' onClick={()=>{
               setEditName(!editName);
             }} />
