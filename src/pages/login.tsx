@@ -58,8 +58,9 @@ function Login() {
 
     const resToken = await authenticationT(res);
       if( resToken && typeof resToken === "boolean"){
+        console.log(res);
         localStorage.setItem("token", res);
-        const resGetUser = await getUser();
+        const resGetUser = await getUser(res);
         if( resGetUser &&typeof resGetUser !== "string" && resGetUser.name){
           localStorage.setItem("user", JSON.stringify(resGetUser));
           navigate("/Dashboard")

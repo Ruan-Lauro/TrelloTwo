@@ -50,7 +50,7 @@ export type userEditPerfil = {
 };
 
 interface UseGetResult {
-  getUser: () => Promise<user | string | undefined>;
+  getUser: (tokenValue: string) => Promise<user | string | undefined>;
   getListUser: ( search: search) => Promise<any>;
   getListUserNoSearch: () => Promise<any>;
   createUser: (user: userCreate) => Promise<any>;
@@ -64,11 +64,11 @@ export const useGetUser = (): UseGetResult => {
 
   const token = localStorage.getItem("token");
 
-  const getUser = async () => {
+  const getUser = async (tokenValue: string) => {
     try {
       const response = await api.get('/usuario/', {
         headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${tokenValue}`,
           },
       })
 
