@@ -55,7 +55,7 @@ function Messages (){
 
     return(
         <LayoutPage name="Mensagens" loadingValue={false} >
-            <main className="w-full min-w-[250px] flex flex-row bg-gray-100 items-start pr-5" >
+            <main className="w-full min-w-[250px] flex flex-col lg:flex-row bg-gray-100 items-start pr-10 sm:pr-5" >
                 <div className="relative px-5 w-full sm:w-[470px] bg-white shadow-md ml-5 mt-5 rounded-[10px] max-h-[75vh] pb-5" >
                     <div className=" w-full pt-5 flex justify-between items-center bg-white">
                         <div className='flex items-center' >
@@ -75,7 +75,7 @@ function Messages (){
                                         navigator(`/MensagemAoUsuario/${user.id}`)
                                     }} >
                                          <ImgUser color="bg-4" nome={user.nome} img={user.foto} id={user.id} />
-                                        <p className="text-[24px] font-bold truncate max-w-[200px]" >{user.nome}</p>
+                                        <p className="text-[24px] font-bold truncate max-w-[150px]" >{user.nome}</p>
                                     </div>
                                 ))}
                             </React.Fragment>
@@ -100,7 +100,7 @@ function Messages (){
                                     }} >
                                         <div className="flex items-center gap-3 " >
                                             <ImgUser color="bg-4" nome={group.nome} img={group.foto} id={group.id} />
-                                            <p className="text-[24px] font-bold truncate max-w-[200px]" >{group.nome}</p>
+                                            <p className="text-[24px] font-bold truncate max-w-[150px]" >{group.nome}</p>
                                         </div>
                                         <div className="flex items-center justify-center w-[28px] h-[28px] rounded-full bg-2" ><p className="font-bold text-white" >0</p></div>
                                         

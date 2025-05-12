@@ -9,8 +9,8 @@ type addUserGroup = {
 
 const AddUserGroup = ({handleAddUser, availableUsers, setShowAddUserModal}:addUserGroup) => {
     return(
-        <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-[90%] max-w-md">
+        <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex sm:items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full sm:w-[90%] max-w-md max-sm:overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-bold text-1">Adicionar Usuário ao Grupo</h3>
                     <button 
@@ -23,13 +23,13 @@ const AddUserGroup = ({handleAddUser, availableUsers, setShowAddUserModal}:addUs
                     </button>
                 </div>
                 
-                <div className="max-h-[60vh] overflow-y-auto">
+                <div className="sm:max-h-[60vh] sm:overflow-y-auto">
                     {availableUsers.length > 0 ? (
                         availableUsers.map((user) => (
                             <div key={user.id} className="flex items-center justify-between p-3 hover:bg-gray-100 rounded-lg mb-2">
                                 <div className="flex items-center gap-3">
                                      <ImgUser color="bg-4" nome={user.nome} img={user.foto} id={user.id} />
-                                    <p className="font-medium truncate max-w-[180px]">{user.nome}</p>
+                                    <p className="font-medium truncate max-w-[120px] sm:max-w-[180px]">{user.nome}</p>
                                 </div>
                                 
                                 <button 

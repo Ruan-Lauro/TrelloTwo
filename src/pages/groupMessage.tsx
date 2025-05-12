@@ -183,21 +183,21 @@ function GroupMessages() {
             <main className="w-full items-start flex bg-gray-100 pt-5">
                 <div className="w-full min-w-[250px] 2xl:w-[1184px] ml-5 max-lg:mr-5">
                     <div className="bg-white h-[90px] w-full rounded-[10px] mb-5 flex items-center justify-between px-5">
-                        <div className="flex items-center gap-5">
+                        <div className="flex items-center gap-2 sm:gap-5">
                             {group?(
                                 <ImgUser color='bg-4' id={1} nome={group?.nome} img={group?.foto} size='w-11 h-11 text-[22px]' textColor='text-white' />
                             ):null}
                             
-                            <p className="font-bold text-[24px] truncate max-w-[200px]">{group?.nome}</p>
+                            <p className="font-bold text-[18px] sm:text-[24px] truncate max-w-[200px]">{group?.nome}</p>
                         </div>
                         {isAdmin && (
-                            <div className='flex items-center gap-5' >
+                            <div className='flex items-center gap-2 sm:gap-5' >
                                 <AiFillSetting className='text-3 text-[25px] cursor-pointer hover:transition-transform hover:duration-700 hover:rotate-180' onClick={()=>{
                                     setTrueEditGroup(true);
                                 }} />
                                 <button 
                                     onClick={() => setShowAddUserModal(true)}
-                                    className="bg-black/10 text-black px-4 py-2 rounded-lg hover:bg-black/20 transition cursor-pointer"
+                                    className="bg-black/10 text-black px-2 max-sm:text-[12px] sm:px-4 py-2 rounded-lg hover:bg-black/20 transition cursor-pointer"
                                 >
                                     Adicionar Usuário
                                 </button>
@@ -269,7 +269,7 @@ function GroupMessages() {
             )}
 
             {group && trueEditGroup?(
-                <EditGroup group={group} onClose={()=>{setTrueEditGroup(false)}} onSuccess={()=>{setUpdate(!update)}} />
+                <EditGroup group={group} onClose={()=>{setTrueEditGroup(false)}} onSuccess={()=>{setUpdate(!update)}} currentUser={currentUser!} handleRemoveUser={handleRemoveUser} isAdmin={isAdmin} list={groupUsers}  />
             ):null}
         </LayoutPage>
     );
