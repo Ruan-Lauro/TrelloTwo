@@ -15,7 +15,7 @@ export default function Button (
     }:button){
 
     return(
-        <button className={`w-[161px] h-[48px] rounded-[100px] bg-white hover:bg-7 text-black cursor-pointer`} type={type} onClick={authentication} id={id}>
+        <button className={`w-[161px] h-[48px] rounded-[100px] bg-white hover:bg-7 text-1 cursor-pointer font-bold`} type={type} onClick={authentication} id={id}>
             {children}
         </button>
     );

@@ -11,6 +11,7 @@ import { ChatProvider } from "./contexts/contextChat";
 import EditUser from "./pages/editUser";
 import EditProfile from "./pages/editProfile";
 import GroupMessages from "./pages/groupMessage";
+import ForgotPassword from "./pages/forgotPassword";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
      <ChatProvider>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/EsqueceuSenha" element={<ForgotPassword />} />
         <Route element={<ProtectedLayout />}>
           <Route path="/Dashboard" element={<Dashboard/>} />
           <Route path="/Mensagens" element={<Messages/>} />

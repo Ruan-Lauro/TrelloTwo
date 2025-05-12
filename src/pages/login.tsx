@@ -81,7 +81,7 @@ function Login() {
             <Input name='E-mail:' value={email} onchange={handleEmail} placeholder='Ex: admin@admin.com' type='email' key="email" />
             <div className='flex flex-col' >
               <Input name='Senha:' value={password} onchange={handlePassword} placeholder='' type='password' key="password" />
-              <a className='text-white text-end mr-3 hover:underline' href="">Esqueceu sua senha?</a>
+              <a className='text-white text-end mr-3 hover:underline' href="/EsqueceuSenha">Esqueceu sua senha?</a>
             </div>
           </div>
           <div className='flex w-full justify-end mt-10' >
