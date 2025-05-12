@@ -102,7 +102,7 @@ function PrivateMessages() {
 
     return (
         <LayoutPage name="Mensagens Privadas" loadingValue={false}>
-            <main className="w-full items-start flex bg-gray-100 pt-5">
+            <main className="w-full items-start flex bg-gray-100 pt-5 min-w-[350px]">
                 <div className="w-full min-w-[250px] 2xl:w-[1184px] ml-5 max-lg:mr-5">
                     <div className="bg-white h-[90px] w-full rounded-[10px] mb-5 flex items-center pl-5">
                         <div className="flex items-center gap-5">
