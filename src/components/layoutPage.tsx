@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Header, { userToken } from "../components/header";
 import MenuLeft from "../components/menuLeft";
 import Footer from "./footer";
@@ -14,7 +14,6 @@ type LayoutPageType = {
 };
 
 function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType) {
-    const [search, setSearch] = useState("");
     const [menuLeftShow, setMenuLeftShow] = useState(true);
     const [menuTopShow, setMenuTopShow] = useState(true);
     const [loading, setLoading] = useState(loadingValue);
@@ -31,19 +30,14 @@ function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType
     useEffect(() => {
         setLoading(loadingValue)
     }, [loadingValue])
-    
-    const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
-        setSearch(e.currentTarget.value);
-        console.log(search)
-    };
-    
+
     return(
         <main className="w-full h-screen">
             {loading ? (
                 <LoadingAnimation/>
             ) : null}
             
-            {/* Toast notification system */}
+        
             <NotificationToast timeoutMs={5000} />
             
             <ProfileSettingsModal exit={() => {setOpenTwoMenu(false)}} isOpen={openTwoMenu} />
@@ -52,12 +46,12 @@ function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType
                 <Header 
                     ShowTop={() => {
                         setMenuTopShow(!menuTopShow);
-                    }} 
-                    functionSearch={handleSearch} 
-                    name={name} 
+                    }}
+                    functionSearch={()=>{}}  
+                    name={name}
                     openMenuTwo={() => {
                         setOpenTwoMenu(true)
-                    }} 
+                    }}
                     userData={userData!}
                 />
             </div>
@@ -67,9 +61,9 @@ function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType
                     <MenuLeft 
                         ShowLeft={() => {
                             setMenuLeftShow(!menuLeftShow);
-                        }} 
-                        nameLocal={name} 
-                        isAdmin={userData?.role === 1 ? true : false} 
+                        }}
+                        nameLocal={name}
+                        isAdmin={userData?.role === 1 ? true : false}
                     />
                 </div>
                 

@@ -3,6 +3,7 @@ import {api} from "../services/axios";
 import { workSpaceType } from '../components/selectMenuLeft';
 import { WorkSpaceNew } from '../pages/workSpace';
 
+
 interface workSpace {
     getWorkSpace: () => Promise<workSpaceType[]>;
     getWorkSpaceId: ( id: number) => Promise<WorkSpaceNew[] | string | undefined>;

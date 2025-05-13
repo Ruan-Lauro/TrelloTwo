@@ -1,7 +1,7 @@
 import { ReactSVG } from 'react-svg';
-import Search from '../components/search';
 import React, { ChangeEvent, useState } from 'react';
 import ImgUser from './imgUser';
+import AdvancedSearch from './advancedSearch';
 
 type header = {
     name: string;
@@ -19,8 +19,8 @@ export type userToken = {
 }
 
 export default function Header ({name, functionSearch, ShowTop, openMenuTwo, userData}:header){
-
     const [seeHeader, setSeeHeader] = useState(true);
+    const [useAdvancedSearch, setUseAdvancedSearch] = useState(false);
 
     return(
         <header className={`relative w-full max-sm:justify-between flex items-center bg-6 px-7 transition-all duration-300 ${seeHeader?'h-[200px] sm:h-[130px]':'h-5'}`} >
@@ -42,7 +42,28 @@ export default function Header ({name, functionSearch, ShowTop, openMenuTwo, use
                     </div>
                     <div className='flex items-center w-[70%] sm:pl-15 justify-between max-2xl:justify-end max-2xl:gap-10 max-md:gap-3 max-sm:w-[250px] max-sm:flex-wrap' >
                         <div className='w-[44.26%] min-w-[200px]' >
-                            <Search onClickSearch={()=>{}} onchange={functionSearch} placeholder='Pesquisar'/>
+                            {useAdvancedSearch ? (
+                                <AdvancedSearch placeholder='Pesquisar' />
+                            ) : (
+                                <div 
+                                    className="flex items-center" 
+                                    onClick={() => setUseAdvancedSearch(true)}
+                                >
+                                    <div className="flex items-center bg-2 text-white rounded-full w-full px-5">
+                                        <input
+                                            type="search"
+                                            placeholder='Pesquisar'
+                                            onChange={functionSearch}
+                                            className="bg-transparent w-full focus:outline-0 h-[60px]"
+                                        />
+                                        <ReactSVG
+                                            className="cursor-pointer hover:scale-105 transition-all duration-300 text-[#B2C4D3]"
+                                            src="/src/assets/svg/Search.svg"
+                                            onClick={() => setUseAdvancedSearch(true)}
+                                        />
+                                    </div>
+                                </div>
+                            )}
                         </div>
                         <div className='flex items-center gap-3 sm:gap-5' >
                             <ReactSVG
