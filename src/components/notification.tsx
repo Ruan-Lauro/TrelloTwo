@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef } from 'react';
 import { useChat } from '../contexts/contextChat';
+import { useNavigate } from 'react-router-dom';
+import { nameOfUser } from '../functions/chat';
 
 interface NotificationToastProps {
   timeoutMs?: number;
 }
 
 interface ActiveNotification {
-  id: string;
+  id: number;
   type: 'private' | 'group';
   author: string;
   content: string;
@@ -21,6 +23,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
   const [audioEnabled, setAudioEnabled] = useState<boolean>(() => {
     return localStorage.getItem("audioEnabled") === "true";
   });
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -46,12 +49,17 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
     }
   };
 
-  useEffect(() => {
-    if (!messages || !currentUser) return;
-    if (messages.autor === currentUser) return;
+ useEffect(() => {
+  if (!messages || !currentUser) return;
+  if (messages.autor === currentUser) return;
+
+  const handleNotification = async () => {
+    const id = await nameOfUser(messages.autor);
+
+    if (!id) return;
 
     const newNotification: ActiveNotification = {
-      id: `private-${Date.now()}`,
+      id,
       type: 'private',
       author: messages.autor,
       content: messages.conteudo,
@@ -62,16 +70,20 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
     playNotificationSound();
 
     setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
+      setNotifications(prev => prev.filter(n => n.id !== id));
     }, timeoutMs);
-  }, [messages, currentUser, timeoutMs]);
+  };
+
+  handleNotification();
+}, [messages, currentUser, timeoutMs]);
+
 
   useEffect(() => {
     if (!groupMessages || !currentUser) return;
     if (groupMessages.autor === currentUser) return;
 
     const newNotification: ActiveNotification = {
-      id: `group-${Date.now()}`,
+      id: groupMessages.grupoId,
       type: 'group',
       author: groupMessages.autor,
       content: groupMessages.conteudo,
@@ -86,7 +98,6 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
     }, timeoutMs);
   }, [groupMessages, currentUser, timeoutMs]);
 
-  // Botão de ativação do som
   if (!audioEnabled) {
     return (
       <>
@@ -127,8 +138,11 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
         {notifications.map((notification) => (
           <div
             key={notification.id}
-            className={`flex items-start p-3 rounded-lg shadow-lg transition-all duration-300 transform translate-y-0 
+            className={`flex items-start p-3 rounded-lg shadow-lg transition-all duration-300 transform translate-y-0 cursor-pointer
               ${notification.type === 'private' ? 'bg-blue-50 border-l-4 border-blue-500' : 'bg-green-50 border-l-4 border-green-500'}`}
+            onClick={()=>{
+                notification.type === "group"?navigate(`/MensagemAoGrupo/${notification.id}`): navigate(`/MensagemAoUsuario/${notification.id}`)
+            }}
           >
             <div className="flex-1 min-w-0">
               <p className="font-medium text-gray-900 truncate">

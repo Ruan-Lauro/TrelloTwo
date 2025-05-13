@@ -134,9 +134,11 @@ export default function SelectMenuLeft ({name, isAdmin}:SelectMenuLeft){
                                 }}/>
                             </div>
                         ):null}
-                        <p className="text-5 hover:scale-105 transition-all duration-300 cursor-pointer mt-1" onClick={()=>{
+                        {isAdmin?(
+                            <p className="text-5 hover:scale-105 transition-all duration-300 cursor-pointer mt-1" onClick={()=>{
                             setOnButtonAdd(true);
                         }} >+Criar nova área de trabalho</p>
+                        ):null}
                     </div>
                 </div>
                   
