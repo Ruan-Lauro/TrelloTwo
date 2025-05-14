@@ -52,9 +52,13 @@ function GroupMessages() {
 
     useEffect(()=>{
         scrollToBottom();
+        console.log("Aqui")
         if(id && privateGroupMessages && privateGroupMessages.length > 0 && privateGroupMessages[0].grupoId === parseInt(id)){
+            console.log("Aqui2")
             setMessageGroup(privateGroupMessages);
+              console.log("Aqui3")
             setIsLoading(false);
+              console.log("Aqui4")
         }
        
     },[privateGroupMessages])
@@ -77,13 +81,9 @@ function GroupMessages() {
     }, [showAddUserModal, groupUsers]);
 
     useEffect(() => {
-        console.log("Por aqui")
         if(!id) return;
-         console.log("Por aqui 2")
         if(groupMessages && groupMessages.grupoId===parseInt(id) &&!messageGroup.some(val=> val.autor === groupMessages.autor && val.conteudo === groupMessages.conteudo && groupMessages.dataHora === val.dataHora)){
-             console.log("Por aqui 3")
             setMessageGroup(prev=>[...prev, groupMessages]);
-             console.log("Por aqui 4")
         }    
     
     }, [groupMessages]);
