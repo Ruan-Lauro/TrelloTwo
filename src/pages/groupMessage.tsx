@@ -77,8 +77,13 @@ function GroupMessages() {
     }, [showAddUserModal, groupUsers]);
 
     useEffect(() => {
-        if(groupMessages && !messageGroup.some(val=> val.autor === groupMessages.autor && val.conteudo === groupMessages.conteudo && groupMessages.dataHora === val.dataHora)){
+        console.log("Por aqui")
+        if(!id) return;
+         console.log("Por aqui 2")
+        if(groupMessages && groupMessages.grupoId===parseInt(id) &&!messageGroup.some(val=> val.autor === groupMessages.autor && val.conteudo === groupMessages.conteudo && groupMessages.dataHora === val.dataHora)){
+             console.log("Por aqui 3")
             setMessageGroup(prev=>[...prev, groupMessages]);
+             console.log("Por aqui 4")
         }    
     
     }, [groupMessages]);

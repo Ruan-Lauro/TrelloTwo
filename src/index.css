@@ -7,8 +7,8 @@
   --color-4: #FBA601DE;
   --color-5: #DA980F;
   --color-6: #084F88;
-  --color-7: #E6E6E6; /*cinza mensagem*/
-  --color-8: #3FAE1B; /*Verde claro*/
+  --color-7: #E6E6E6; 
+  --color-8: #3FAE1B;
   --color-9: #F5F5F5;
   --color-10: #D0D0D0;
   --color-11: #001E37;
@@ -22,6 +22,7 @@
   --text-7: #001E37;
 
   --breakpoint-3xl: 1820px;
+  
 }
 
 .custom-scroll::-webkit-scrollbar {
