@@ -120,7 +120,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
         </button>
 
         <audio ref={audioRef}>
-          <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg" />
+          <source src="/src/assets/song/olha-a-mensagem.mp3" type="audio/mpeg" />
           Seu navegador não suporta áudio.
         </audio>
       </>
@@ -130,7 +130,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
   return (
     <>
       <audio ref={audioRef}>
-        <source src="https://www.soundjay.com/buttons/sounds/button-3.mp3" type="audio/mpeg" />
+        <source src="/src/assets/song/olha-a-mensagem.mp3" type="audio/mpeg" />
         Seu navegador não suporta áudio.
       </audio>
 
