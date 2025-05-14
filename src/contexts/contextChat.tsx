@@ -142,7 +142,9 @@ export function ChatProvider({ children }: { children: ReactNode }) {
         setPrivateGroupMessages([]);
         await conn.invoke("GetGroupMessages", groupId);
         console.log("Passando aqui 3")
-        initConnection();
+        await initConnection();
+        console.log("Passando aqui 4")
+
       }
     } catch (err) {
       console.error("Erro ao buscar mensagens de grupo:", err);
