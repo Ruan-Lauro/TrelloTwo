@@ -39,6 +39,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("token"); 
     if(token){
       createConnection(token);
+      initConnection();
     }
   }, []);
 
