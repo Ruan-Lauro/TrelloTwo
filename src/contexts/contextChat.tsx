@@ -129,11 +129,13 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     try {
       await waitForConnection();
       const conn = getConnection();
+      console.log("Passando aqui 1")
       if (conn) {
         const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
-    
+        console.log("Passando aqui 2")
         setPrivateGroupMessages([]);
         await conn.invoke("GetGroupMessages", groupId);
+        console.log("Passando aqui 3")
         initConnection();
       }
     } catch (err) {

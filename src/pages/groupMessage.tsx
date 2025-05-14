@@ -105,42 +105,43 @@ function GroupMessages() {
     },[messageGroup])
 
     const fetchData = async () => {
-
+        console.log("Estou aqui 1")
         if (!id) return;
-
+        
         const userJson = localStorage.getItem("user");
         if (!userJson) {
             navigator('/login');
             return;
         }
-        
+         console.log("Estou aqui 2")
         const userData = JSON.parse(userJson);
         setCurrentUser(userData);
-        
 
         const groups = await getUserGroups();
-
+         console.log("Estou aqui 3")
         if (typeof groups !== 'string' && groups !== undefined) {
             const currentGroup = groups.find(g => g.id === parseInt(id));
             console.log(groups)
             console.log(currentGroup)
             if (currentGroup) {
                 setGroup(currentGroup);
+                 console.log("Estou aqui 4")
             } else {
                 navigator('/Mensagens');
                 return;
             }
         }
-        
+         console.log("Estou aqui 5")
         const members = await getGroupUsers(parseInt(id));
 
         if (typeof members !== 'string' && members !== undefined) {
             setGroupUsers(members);
-
+             console.log("Estou aqui 6")
             setIsAdmin(userData.role === 1);
         }
-        
+         console.log("Estou aqui 7")
        await getGroupMessages(parseInt(id));
+        console.log("Estou aqui 8")
     //    setIsLoading(false);
     };
     
