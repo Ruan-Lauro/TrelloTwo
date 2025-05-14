@@ -48,9 +48,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   };
 
   const initConnection = async (): Promise<void> => {
-    
+     console.log("Não Tomeeeeeeeeeeeeeeeee")
     await waitForConnection();
     
+    console.log("Tomeeeeeeeeeeeeeeeee")
+
     registerListener<[Message]>("ReceiveMessage", (msg: Message) => {
       if(!msg) return;
       setMessages(msg);
@@ -71,6 +73,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     });
     
     registerListener("ReceiveAllGroupMessages", (msgs: GroupMessage[]) => {
+      console.log(msgs);
+      console.log("Cheguei aquiii")
       if (!msgs) return;
       console.log(msgs);
       console.log("Por aqui estou passando")
