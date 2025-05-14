@@ -50,8 +50,6 @@ export default function SelectMenuLeft ({name, isAdmin}:SelectMenuLeft){
             const filteredWorkspaces = listWorkSpace.filter(ws =>
                 userWorkplacesIds.includes(ws.id)
             );
-
-            console.log(filteredWorkspaces)
     
             setShowList(filteredWorkspaces);
         }

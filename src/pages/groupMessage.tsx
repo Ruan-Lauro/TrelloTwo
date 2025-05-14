@@ -53,6 +53,10 @@ function GroupMessages() {
     useEffect(()=>{
         scrollToBottom();
         console.log("Aqui")
+        console.log(id)
+        console.log(privateGroupMessages)
+        // console.log(privateGroupMessages[0].grupoId)
+
         if(id && privateGroupMessages && privateGroupMessages.length > 0 && privateGroupMessages[0].grupoId === parseInt(id)){
             console.log("Aqui2")
             setMessageGroup(privateGroupMessages);
@@ -137,7 +141,7 @@ function GroupMessages() {
         }
         
        await getGroupMessages(parseInt(id));
-       setIsLoading(false);
+    //    setIsLoading(false);
     };
     
     const scrollToBottom = () => {

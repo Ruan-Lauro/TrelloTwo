@@ -49,8 +49,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
 
   const initConnection = async (): Promise<void> => {
     
-    console.log("É de ladinho popay")
-    
     await waitForConnection();
     
     registerListener<[Message]>("ReceiveMessage", (msg: Message) => {
@@ -130,7 +128,6 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const getGroupMessages = async (toGroupId: string | number): Promise<void> => {
     try {
       await waitForConnection();
-      console.log("Poraaaaaa")
       const conn = getConnection();
       if (conn) {
         const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
