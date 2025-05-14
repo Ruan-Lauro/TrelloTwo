@@ -72,6 +72,8 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     
     registerListener("ReceiveAllGroupMessages", (msgs: GroupMessage[]) => {
       if (!msgs) return;
+      console.log(msgs);
+      console.log("Por aqui estou passando")
       setPrivateGroupMessages(msgs);
     });
   };
