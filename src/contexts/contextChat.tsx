@@ -49,10 +49,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   };
 
   const initConnection = async (): Promise<void> => {
-     console.log("Não Tomeeeeeeeeeeeeeeeee")
     await waitForConnection();
-    
-    console.log("Tomeeeeeeeeeeeeeeeee")
 
     registerListener<[Message]>("ReceiveMessage", (msg: Message) => {
       if(!msg) return;
@@ -74,11 +71,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     });
     
     registerListener("ReceiveAllGroupMessages", (msgs: GroupMessage[]) => {
-      console.log(msgs);
-      console.log("Cheguei aquiii")
       if (!msgs) return;
-      console.log(msgs);
-      console.log("Por aqui estou passando")
       setPrivateGroupMessages(msgs);
     });
   };
@@ -136,15 +129,11 @@ export function ChatProvider({ children }: { children: ReactNode }) {
     try {
       await waitForConnection();
       const conn = getConnection();
-      console.log("Passando aqui 1")
       if (conn) {
         const groupId = typeof toGroupId === 'number' ? toGroupId.toString() : toGroupId;
-        console.log("Passando aqui 2")
         setPrivateGroupMessages([]);
         await conn.invoke("GetGroupMessages", groupId);
-        console.log("Passando aqui 3")
         await initConnection();
-        console.log("Passando aqui 4")
 
       }
     } catch (err) {
