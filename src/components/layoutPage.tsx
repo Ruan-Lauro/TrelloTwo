@@ -6,14 +6,21 @@ import LoadingAnimation from "./loading";
 import ProfileSettingsModal from "./modalOption";
 import NotificationToast from "./notification";
 
+export type inforMessage = {
+    id: number;
+    nome: string;
+    type: "group" | "user";
+}
+
 type LayoutPageType = {
     name: string;
     children: React.ReactNode;
     loadingValue: boolean;
     updateHeader?: number;
+    inforMessage?: inforMessage;
 };
 
-function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType) {
+function LayoutPage({name, children, loadingValue, updateHeader, inforMessage}: LayoutPageType) {
     const [menuLeftShow, setMenuLeftShow] = useState(true);
     const [menuTopShow, setMenuTopShow] = useState(true);
     const [loading, setLoading] = useState(loadingValue);
@@ -38,7 +45,7 @@ function LayoutPage({name, children, loadingValue, updateHeader}: LayoutPageType
             ) : null}
             
         
-            <NotificationToast timeoutMs={5000} />
+            <NotificationToast timeoutMs={5000} inforMessage={inforMessage!} />
             
             <ProfileSettingsModal exit={() => {setOpenTwoMenu(false)}} isOpen={openTwoMenu} />
             

@@ -2,9 +2,11 @@ import { useEffect, useState, useRef } from 'react';
 import { useChat } from '../contexts/contextChat';
 import { useNavigate } from 'react-router-dom';
 import { nameOfUser } from '../functions/chat';
+import { inforMessage } from './layoutPage';
 
 interface NotificationToastProps {
   timeoutMs?: number;
+  inforMessage?: inforMessage;
 }
 
 interface ActiveNotification {
@@ -15,7 +17,7 @@ interface ActiveNotification {
   timestamp: number;
 }
 
-export default function NotificationToast({ timeoutMs = 5000 }: NotificationToastProps) {
+export default function NotificationToast({ timeoutMs = 5000, inforMessage }: NotificationToastProps) {
   const { messages, groupMessages } = useChat();
   const [notifications, setNotifications] = useState<ActiveNotification[]>([]);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
@@ -52,6 +54,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
  useEffect(() => {
   if (!messages || !currentUser) return;
   if (messages.autor === currentUser) return;
+  if(inforMessage && inforMessage.type === "user" && inforMessage.nome === messages.autor) return;
 
   const handleNotification = async () => {
     const id = await nameOfUser(messages.autor);
@@ -81,6 +84,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
   useEffect(() => {
     if (!groupMessages || !currentUser) return;
     if (groupMessages.autor === currentUser) return;
+    if(inforMessage && inforMessage.type === "group" && inforMessage.id === groupMessages.grupoId) return;
 
     const newNotification: ActiveNotification = {
       id: groupMessages.grupoId,
@@ -96,7 +100,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
     setTimeout(() => {
       setNotifications(prev => prev.filter(n => n.id !== newNotification.id));
     }, timeoutMs);
-  }, [groupMessages, currentUser, timeoutMs]);
+  }, [groupMessages]);
 
   if (!audioEnabled) {
     return (

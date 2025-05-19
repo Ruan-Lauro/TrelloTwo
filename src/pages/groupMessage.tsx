@@ -170,7 +170,7 @@ function GroupMessages() {
 
 
     return (
-        <LayoutPage name="Mensagens de Grupo" loadingValue={false}>
+        <LayoutPage name="Mensagens de Grupo" loadingValue={false} inforMessage={{id:group?.id!, nome:group?.nome!, type:'group'}}>
             <main className="w-full items-start flex bg-gray-100 pt-5">
                 <div className="w-full min-w-[250px] 2xl:w-[1184px] ml-5 max-lg:mr-5">
                     <div className="bg-white h-[90px] w-full rounded-[10px] mb-5 flex items-center justify-between px-5">
