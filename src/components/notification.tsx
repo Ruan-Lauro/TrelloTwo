@@ -75,7 +75,7 @@ export default function NotificationToast({ timeoutMs = 5000 }: NotificationToas
   };
 
   handleNotification();
-}, [messages, currentUser, timeoutMs]);
+}, [messages]);
 
 
   useEffect(() => {
