@@ -3,8 +3,6 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
-  TouchSensor,
-  MouseSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -26,7 +24,7 @@ import { useGetColumn } from '../hooks/useGetColunm';
 import { useGetCard } from '../hooks/useGetCard';
 import ShowCard, { Tag } from '../components/showCard';
 
-// Definição dos tipos (mantém os mesmos tipos existentes)
+// Definição dos tipos
 export type Membro = {
   id: number;
   nome: string;
@@ -72,37 +70,10 @@ const WorkSpace = () => {
   
   const [colunas, setColunas] = useState<ColunaType[]>([]);
 
-  // Configuração melhorada dos sensores para mobile e desktop
-  const sensors = useSensors(
-    // Sensor para mouse (desktop)
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 10, // Aumenta a distância mínima para ativar o drag
-        delay: 150,   // Adiciona delay para desktop
-        tolerance: 5,
-      },
-    }),
-    // Sensor para touch (mobile)
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 200,    // Delay maior para mobile
-        tolerance: 10, // Maior tolerância para mobile
-      },
-    }),
-    // Sensor de ponteiro como fallback
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-        delay: 150,
-        tolerance: 5,
-      },
-    })
-  );
-
-  useEffect(() => {
-    if(id) {
+  useEffect(()=>{
+    if(id){
       const token = localStorage.getItem('token');
-      if(token) {
+      if(token){
         const workSpace = getWorkSpaceId(parseInt(id));
         console.log(workSpace)
         workSpace.then((res) => {
@@ -117,7 +88,15 @@ const WorkSpace = () => {
         });
       }
     }
-  }, [update, id]);
+  },[update, id]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    })
+  );
 
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
@@ -165,9 +144,9 @@ const WorkSpace = () => {
             if (token) {
               console.log(activeColumnId)
               console.log(newIndex)
-              const value = moveColum(activeColumnId, newIndex);
-              value.then(res => {
-                if(typeof res === "boolean" && res) {
+              const value =  moveColum(activeColumnId, newIndex);
+              value.then(res=>{
+                if(typeof res === "boolean" && res){
                   console.log("Aquiiiii")
                   setLoading(false);
                 } 
@@ -183,7 +162,7 @@ const WorkSpace = () => {
     setActiveId(null);
     setActiveType(null);
     setLoading(false);
-  }, [activeType, id, moveColum]);
+  }, [activeType]);
 
   const handleDragOver = useCallback((event: DragOverEvent) => {
     const { active, over } = event;
@@ -194,6 +173,7 @@ const WorkSpace = () => {
       const activeCardId = parseInt(active.id.toString().replace('card-', ''));
       
       if (over.id.toString().includes('card-')) {
+
         const overCardId = parseInt(over.id.toString().replace('card-', ''));
         
         if (activeCardId !== overCardId) {
@@ -237,18 +217,19 @@ const WorkSpace = () => {
                 cards: updatedCards,
               };
 
-              const colunaId = prevColunas[activeColumnIndex].id;
-              moveCard({
-                CardId: activeCardId,
-                ColunaId: colunaId,
-                Order: overCardIndex + 1
-              });
-              console.log("Resultado mesma coluna:")
-              console.log({
-                CardId: activeCardId,
-                ColunaId: colunaId,
-                Order: overCardIndex + 1
-              })
+            const colunaId = prevColunas[activeColumnIndex].id;
+            moveCard({
+              CardId: activeCardId,
+              ColunaId: colunaId,
+              Order: overCardIndex + 1
+            });
+            console.log("Resultado mesma coluna:")
+            console.log({
+              CardId: activeCardId,
+              ColunaId: colunaId,
+              Order: overCardIndex + 1
+            })
+            
               
               return updatedColunas;
             } 
@@ -270,18 +251,18 @@ const WorkSpace = () => {
                 order: index,
               }));
 
-              const novaColunaId = prevColunas[overColumnIndex].id;
-              moveCard({
-                CardId: activeCardId,
-                ColunaId: novaColunaId,
-                Order: overCardIndex + 1
-              });
-              console.log("Resultado colunas diferentes:")
-              console.log({
-                CardId: activeCardId,
-                ColunaId: novaColunaId,
-                Order: overCardIndex + 1
-              })
+            const novaColunaId = prevColunas[overColumnIndex].id;
+            moveCard({
+              CardId: activeCardId,
+              ColunaId: novaColunaId,
+              Order: overCardIndex + 1
+            });
+            console.log("Resultado colunas diferentes:")
+            console.log({
+              CardId: activeCardId,
+              ColunaId: novaColunaId,
+              Order: overCardIndex + 1
+            })
               return updatedColunas;
             }
           });
@@ -340,12 +321,14 @@ const WorkSpace = () => {
             ColunaId: overColumnId,
             Order: updatedColunas[overColumnIndex].cards.length
           });
+
+          
           
           return updatedColunas;
         });
       }
     }
-  }, [activeType, moveCard]);
+  }, [activeType]);
 
   const getActiveItem = useCallback(() => {
     if (!activeId || !activeType) return null;
@@ -355,7 +338,7 @@ const WorkSpace = () => {
       if (coluna) {
         return (
           <div className="opacity-70 pointer-events-none">
-            <Coluna coluna={coluna} functionUptade={() => {setUpdate(!update)}} inforCard={showCardInfor} />
+            <Coluna coluna={coluna} functionUptade={()=>{setUpdate(!update)}} inforCard={showCardInfor} />
           </div>
         );
       }
@@ -372,31 +355,32 @@ const WorkSpace = () => {
       if (activeCard) {
         return (
           <div className="opacity-70 pointer-events-none">
-            <Card card={activeCard} onClick={() => {}} />
+            <Card card={activeCard} onClick={()=>{}} />
           </div>
         );
       }
     }
     
     return null;
-  }, [activeId, activeType, colunas, update]);
+  }, [activeId, activeType, colunas]);
 
   const sortedColunas = [...colunas].sort((a, b) => a.order - b.order);
   console.log(sortedColunas)
 
   const createColumnNew = () => {
-    if(WorkSpace?.id) {
-      const res = creatColum({workspaceId: WorkSpace?.id, nome: "Coluna 2"});
-      res.then(value => {
-        if(typeof value === "boolean" && value) {
+
+    if(WorkSpace?.id){
+      const res = creatColum({workspaceId:WorkSpace?.id, nome:"Coluna 2"});
+      res.then(value=>{
+        if( typeof value === "boolean" && value){
           setUpdate(!update);
         }
       });
     }
   };
 
-  const showCardInfor = (number: number, show: boolean, nameColumn: string) => {
-    if(show) {
+  const showCardInfor = (number: number, show: boolean, nameColumn:string) =>{
+    if(show){
       setClick(true);
       setIdCard(number);
       setColumnName(nameColumn);
@@ -405,50 +389,49 @@ const WorkSpace = () => {
 
   return (
     <LayoutPage name={WorkSpace?.nome!} loadingValue={loading}>
-      <div className="p-6 bg-gray-100 h-[100%] min-w-[350px]">
-        <div className='max-xl:flex-col flex items-center justify-between mb-5'>
-          <h2 className="max-xl:text-center text-[20px] break-words xl:text-2xl text-[#003057] font-bold xl:truncate w-[60%]">
-            Área de Trabalho - {WorkSpace?.nome!}
-          </h2>
-          <div className='flex gap-2 items-center hover:scale-105 transition-all duration-300 cursor-pointer' onClick={createColumnNew}>
-            <p className='text-11 font-bold'>Adicionar Coluna</p>
-            <div className='flex items-center justify-center text-1 font-bold text-[20px] xl:text-[30px] border-1 border-[3px] w-6 h-6 xl:w-9 xl:h-9 rounded-full'>
-              <p className='mb-1'>+</p>
+       
+        <div className="p-6 bg-gray-100 h-[100%] min-w-[350px]">
+            <div className='max-xl:flex-col flex items-center justify-between mb-5' >
+              <h2 className="max-xl:text-center text-[20px] break-words xl:text-2xl text-[#003057] font-bold xl:truncate w-[60%] ">Área de Trabalho - {WorkSpace?.nome!}</h2>
+              <div className='flex gap-2 items-center hover:scale-105 transition-all duration-300 cursor-pointer' onClick={createColumnNew} >
+                <p className='text-11 font-bold' >Adicionar Coluna</p>
+                <div className='flex items-center justify-center text-1 font-bold text-[20px] xl:text-[30px] border-1 border-[3px] w-6 h-6 xl:w-9 xl:h-9 rounded-full' >
+                <p className='mb-1' >+</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          onDragOver={handleDragOver}
-        >
-          <div className="flex gap-4 overflow-x-auto h-full max-h-[70vh] pb-4 elemento items-start">
-            <SortableContext
-              items={sortedColunas.map(col => `coluna-${col.id}`)}
-              strategy={horizontalListSortingStrategy}
+            
+            <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
             >
-              {sortedColunas.map((coluna) => (
-                <Coluna 
-                  key={coluna.id}
-                  coluna={coluna}
-                  functionUptade={() => {setUpdate(!update)}}
-                  inforCard={showCardInfor}
-                />
-              ))}
-            </SortableContext>
-          </div>
-          
-          <DragOverlay>{getActiveItem()}</DragOverlay>
-        </DndContext>
-      </div>
-      {click && idCard?(
-        <ShowCard id={idCard} nameColumn={columnName} closeCard={() => {
+                <div className="flex gap-4 overflow-x-auto h-full max-h-[70vh] pb-4 elemento items-start">
+                <SortableContext
+                    items={sortedColunas.map(col => `coluna-${col.id}`)}
+                    strategy={horizontalListSortingStrategy}
+                >
+                    {sortedColunas.map((coluna) => (
+                    <Coluna 
+                        key={coluna.id}
+                        coluna={coluna}
+                        functionUptade={()=>{setUpdate(!update)}}
+                        inforCard={showCardInfor}
+                    />
+                    ))}
+                </SortableContext>
+                </div>
+                
+                <DragOverlay>{getActiveItem()}</DragOverlay>
+            </DndContext>
+        </div>
+        {click && idCard?(
+        <ShowCard id={idCard} nameColumn={columnName} closeCard={()=>{
           setClick(false);
-        }} updateN={() => {setUpdate(!update)}} />
-      ) : null}
+        }} updateN={()=>{setUpdate(!update)}} />
+      ):null}
     </LayoutPage>
   );
 };
