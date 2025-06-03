@@ -169,6 +169,7 @@
     };
 
     const moveCard = async (card:cardMove) => {
+      console.log("Movecard aqui")
         try {
           const response = await api.put('/workspace/card/move/', card, {
             headers: {

@@ -16,6 +16,7 @@ import Status from "./status";
 import CheckList from "./checkList";
 import DateTime from "./dateTime";
 import CommentCard from "./comment";
+import LoadingAnimation from "./loading";
 
 export type Membro = {
     id: number;
@@ -309,7 +310,7 @@ export default function ShowCard ({id, nameColumn, closeCard, updateN}:{id: numb
                     </div>
                 </div>
             ):(
-                <p className="font-bold text-white text-[20px]" >Card não existe</p>
+                <LoadingAnimation/>
             )}
         </section>
     );

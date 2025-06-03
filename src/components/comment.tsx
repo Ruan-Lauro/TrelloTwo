@@ -151,7 +151,7 @@ const CommentCard = ({ card, update }: CommentCardProps) => {
 
       <div className="flex flex-col gap-10 sm:gap-4 mb-6 ">
         {card?.comentarios && card.comentarios.length > 0 ? (
-          card.comentarios.map((comentario) => (
+          card.comentarios.slice().reverse().map((comentario) => (
             <div key={comentario.id} className="flex gap-3 max-w-full">
               <div className="flex-shrink-0">
                 <ImgUser id={0} img={comentario.foto} nome={comentario.usuario} color="bg-4" />

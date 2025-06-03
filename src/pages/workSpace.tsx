@@ -70,31 +70,30 @@ const WorkSpace = () => {
   const [idCard, setIdCard] = useState<number>();
   const [columnName, setColumnName] = useState("");
   
-  const [colunas, setColunas] = useState<ColunaType[]>([]);
+  // Estado para armazenar preview das mudanças durante o drag
+  const [previewWorkSpace, setPreviewWorkSpace] = useState<WorkSpaceNew | null>(null);
 
-  // Configuração melhorada dos sensores para mobile e desktop
   const sensors = useSensors(
-    // Sensor para mouse (desktop)
-    useSensor(MouseSensor, {
-      activationConstraint: {
-        distance: 10, // Aumenta a distância mínima para ativar o drag
-        delay: 150,   // Adiciona delay para desktop
-        tolerance: 5,
-      },
-    }),
-    // Sensor para touch (mobile)
     useSensor(TouchSensor, {
       activationConstraint: {
-        delay: 200,    // Delay maior para mobile
-        tolerance: 10, // Maior tolerância para mobile
+        delay: 100,        
+        tolerance: 15,     
       },
     }),
-    // Sensor de ponteiro como fallback
+  
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 8,       
+        delay: 100,        
+        tolerance: 8,     
+      },
+    }),
+
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 10,
-        delay: 150,
-        tolerance: 5,
+        distance: 8,
+        delay: 100,
+        tolerance: 8,
       },
     })
   );
@@ -110,7 +109,8 @@ const WorkSpace = () => {
             const workspaceE = res as WorkSpaceNew;
             setWorkSpace(workspaceE);
             console.log(workspaceE)
-            setColunas(workspaceE.colunas)
+            // Limpa o preview quando carrega novos dados
+            setPreviewWorkSpace(null);
           } else {
             console.warn('Resposta inesperada:', res);
           }
@@ -119,11 +119,26 @@ const WorkSpace = () => {
     }
   }, [update, id]);
 
+  const preventBodyScroll = () => {
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.height = '100%';
+  };
+
+  const restoreBodyScroll = () => {
+    document.body.style.overflow = '';
+    document.body.style.position = '';
+    document.body.style.width = '';
+    document.body.style.height = '';
+  };
+
   const handleDragStart = useCallback((event: DragStartEvent) => {
     const { active } = event;
     const id = active.id.toString();
     
-    // Determinar se estamos arrastando uma coluna ou um card
+    preventBodyScroll();
+    
     if (id.includes('coluna-')) {
       setActiveType('coluna');
       setActiveId(id.replace('coluna-', ''));
@@ -131,64 +146,24 @@ const WorkSpace = () => {
       setActiveType('card');
       setActiveId(id.replace('card-', ''));
     }
-  }, []);
-
-  const handleDragEnd = useCallback((event: DragEndEvent) => {
-    const { active, over } = event;
     
-    if (!over) {
-      setActiveId(null);
-      setActiveType(null);
-      return;
+    // Inicializa o preview com os dados atuais
+    if (WorkSpace) {
+      setPreviewWorkSpace({ ...WorkSpace });
     }
+  }, [WorkSpace]);
 
-    setLoading(true);
-
-    if (activeType === 'coluna' && over.id.toString().includes('coluna-')) {
-      const activeColumnId = parseInt(active.id.toString().replace('coluna-', ''));
-      const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
-      
-      if (activeColumnId !== overColumnId) {
-        setColunas((prevColunas) => {
-          const oldIndex = prevColunas.findIndex((col) => col.id === activeColumnId);
-          const newIndex = prevColunas.findIndex((col) => col.id === overColumnId);
-          
-          const reordered = arrayMove(prevColunas, oldIndex, newIndex);
-          
-          const updatedColumns = reordered.map((col, index) => ({
-            ...col,
-            order: index,
-          }));
-
-          if (id) {
-            const token = localStorage.getItem('token');
-            if (token) {
-              console.log(activeColumnId)
-              console.log(newIndex)
-              const value = moveColum(activeColumnId, newIndex);
-              value.then(res => {
-                if(typeof res === "boolean" && res) {
-                  console.log("Aquiiiii")
-                  setLoading(false);
-                } 
-              })
-            }
-          }
-          
-          return updatedColumns;
-        });
-      }
-    }
-    
-    setActiveId(null);
-    setActiveType(null);
-    setLoading(false);
-  }, [activeType, id, moveColum]);
+  const [dragInfo, setDragInfo] = useState<{
+    cardId: number;
+    fromColumnId: number;
+    toColumnId: number;
+    newOrder: number;
+  } | null>(null);
 
   const handleDragOver = useCallback((event: DragOverEvent) => {
     const { active, over } = event;
     
-    if (!over) return;
+    if (!over || !WorkSpace) return;
     
     if (activeType === 'card') {
       const activeCardId = parseInt(active.id.toString().replace('card-', ''));
@@ -197,164 +172,264 @@ const WorkSpace = () => {
         const overCardId = parseInt(over.id.toString().replace('card-', ''));
         
         if (activeCardId !== overCardId) {
-          setColunas((prevColunas) => {
-            let activeColumnIndex = -1;
-            let activeCardIndex = -1;
-            let overColumnIndex = -1;
-            let overCardIndex = -1;
-            
-            prevColunas.forEach((coluna, colIndex) => {
-              const cardActiveIndex = coluna.cards.findIndex(card => card.id === activeCardId);
-              const cardOverIndex = coluna.cards.findIndex(card => card.id === overCardId);
-              
-              if (cardActiveIndex !== -1) {
-                activeColumnIndex = colIndex;
-                activeCardIndex = cardActiveIndex;
-              }
-              
-              if (cardOverIndex !== -1) {
-                overColumnIndex = colIndex;
-                overCardIndex = cardOverIndex;
-              }
-            });
-            
-            if (activeColumnIndex === overColumnIndex) {
-              console.log("Se ambos os cards estão na mesma coluna, apenas reordene")
-              const newCards = arrayMove(
-                prevColunas[activeColumnIndex].cards,
-                activeCardIndex,
-                overCardIndex
-              );
-              
-              const updatedCards = newCards.map((card, index) => ({
-                ...card,
-                order: index,
-              }));
-              
-              const updatedColunas = [...prevColunas];
-              updatedColunas[activeColumnIndex] = {
-                ...updatedColunas[activeColumnIndex],
-                cards: updatedCards,
-              };
-
-              const colunaId = prevColunas[activeColumnIndex].id;
-              moveCard({
-                CardId: activeCardId,
-                ColunaId: colunaId,
-                Order: overCardIndex + 1
-              });
-              console.log("Resultado mesma coluna:")
-              console.log({
-                CardId: activeCardId,
-                ColunaId: colunaId,
-                Order: overCardIndex + 1
-              })
-              
-              return updatedColunas;
-            } 
-            else {
-              console.log("Se os cards estão em colunas diferentes, mova o card para a nova coluna")
-              const updatedColunas = [...prevColunas];
-              
-              const [movedCard] = updatedColunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
-              
-              updatedColunas[activeColumnIndex].cards = updatedColunas[activeColumnIndex].cards.map((card, index) => ({
-                ...card,
-                order: index,
-              }));
-              
-              updatedColunas[overColumnIndex].cards.splice(overCardIndex, 0, movedCard);
-              
-              updatedColunas[overColumnIndex].cards = updatedColunas[overColumnIndex].cards.map((card, index) => ({
-                ...card,
-                order: index,
-              }));
-
-              const novaColunaId = prevColunas[overColumnIndex].id;
-              moveCard({
-                CardId: activeCardId,
-                ColunaId: novaColunaId,
-                Order: overCardIndex + 1
-              });
-              console.log("Resultado colunas diferentes:")
-              console.log({
-                CardId: activeCardId,
-                ColunaId: novaColunaId,
-                Order: overCardIndex + 1
-              })
-              return updatedColunas;
-            }
-          });
-        }
-      } 
-      else if (over.id.toString().includes('coluna-')) {
-        console.log("Se estamos arrastando sobre uma coluna (para adicionar o card ao final da coluna)")
-        const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
-        
-        setColunas((prevColunas) => {
+          const newWorkSpace = { ...WorkSpace };
           let activeColumnIndex = -1;
           let activeCardIndex = -1;
           let overColumnIndex = -1;
+          let overCardIndex = -1;
           
-          prevColunas.forEach((coluna, colIndex) => {
+          newWorkSpace.colunas.forEach((coluna, colIndex) => {
             const cardActiveIndex = coluna.cards.findIndex(card => card.id === activeCardId);
+            const cardOverIndex = coluna.cards.findIndex(card => card.id === overCardId);
             
             if (cardActiveIndex !== -1) {
               activeColumnIndex = colIndex;
               activeCardIndex = cardActiveIndex;
             }
             
-            if (coluna.id === overColumnId) {
+            if (cardOverIndex !== -1) {
               overColumnIndex = colIndex;
+              overCardIndex = cardOverIndex;
             }
           });
           
           if (activeColumnIndex === overColumnIndex) {
-            return prevColunas;
+            // Reordena cards na mesma coluna
+            const newCards = arrayMove(
+              newWorkSpace.colunas[activeColumnIndex].cards,
+              activeCardIndex,
+              overCardIndex
+            );
+            
+            // Recalcula as ordens sequencialmente
+            const updatedCards = newCards.map((card, index) => ({
+              ...card,
+              order: index,
+            }));
+            
+            newWorkSpace.colunas[activeColumnIndex] = {
+              ...newWorkSpace.colunas[activeColumnIndex],
+              cards: updatedCards,
+            };
+            
+            // Salva informações para o dragEnd
+            setDragInfo({
+              cardId: activeCardId,
+              fromColumnId: WorkSpace.colunas[activeColumnIndex].id,
+              toColumnId: WorkSpace.colunas[activeColumnIndex].id,
+              newOrder: overCardIndex,
+            });
+            
+            setPreviewWorkSpace(newWorkSpace);
+          } else {
+            // Move card para coluna diferente
+            const [movedCard] = newWorkSpace.colunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
+            
+            // Reordena cards da coluna origem
+            newWorkSpace.colunas[activeColumnIndex].cards = newWorkSpace.colunas[activeColumnIndex].cards.map((card, index) => ({
+              ...card,
+              order: index,
+            }));
+            
+            // Insere card na nova posição
+            newWorkSpace.colunas[overColumnIndex].cards.splice(overCardIndex, 0, movedCard);
+            
+            // Reordena cards da coluna destino
+            newWorkSpace.colunas[overColumnIndex].cards = newWorkSpace.colunas[overColumnIndex].cards.map((card, index) => ({
+              ...card,
+              order: index,
+            }));
+            
+            // Salva informações para o dragEnd
+            setDragInfo({
+              cardId: activeCardId,
+              fromColumnId: WorkSpace.colunas[activeColumnIndex].id,
+              toColumnId: WorkSpace.colunas[overColumnIndex].id,
+              newOrder: overCardIndex,
+            });
+            
+            setPreviewWorkSpace(newWorkSpace);
+          }
+        }
+      } else if (over.id.toString().includes('coluna-')) {
+        const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
+        
+        const newWorkSpace = { ...WorkSpace };
+        let activeColumnIndex = -1;
+        let activeCardIndex = -1;
+        let overColumnIndex = -1;
+        
+        newWorkSpace.colunas.forEach((coluna, colIndex) => {
+          const cardActiveIndex = coluna.cards.findIndex(card => card.id === activeCardId);
+          
+          if (cardActiveIndex !== -1) {
+            activeColumnIndex = colIndex;
+            activeCardIndex = cardActiveIndex;
           }
           
-          const updatedColunas = [...prevColunas];
+          if (coluna.id === overColumnId) {
+            overColumnIndex = colIndex;
+          }
+        });
+        
+        if (activeColumnIndex !== overColumnIndex) {
+          const [movedCard] = newWorkSpace.colunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
           
-          const [movedCard] = updatedColunas[activeColumnIndex].cards.splice(activeCardIndex, 1);
-          
-          updatedColunas[activeColumnIndex].cards = updatedColunas[activeColumnIndex].cards.map((card, index) => ({
+          // Reordena cards da coluna origem
+          newWorkSpace.colunas[activeColumnIndex].cards = newWorkSpace.colunas[activeColumnIndex].cards.map((card, index) => ({
             ...card,
             order: index,
           }));
           
-          updatedColunas[overColumnIndex].cards.push({
+          // Adiciona card ao final da coluna destino
+          const newOrder = newWorkSpace.colunas[overColumnIndex].cards.length;
+          newWorkSpace.colunas[overColumnIndex].cards.push({
             ...movedCard,
-            order: updatedColunas[overColumnIndex].cards.length,
-          });
-
-          const tome = {
-            CardId: activeCardId,
-            ColunaId: overColumnId,
-            Order: updatedColunas[overColumnIndex].cards.length
-          }
-          console.log("Resultado de para último:")
-          console.log(tome)
-
-          moveCard({
-            CardId: activeCardId,
-            ColunaId: overColumnId,
-            Order: updatedColunas[overColumnIndex].cards.length
+            order: newOrder,
           });
           
-          return updatedColunas;
-        });
+          // Salva informações para o dragEnd
+          setDragInfo({
+            cardId: activeCardId,
+            fromColumnId: WorkSpace.colunas[activeColumnIndex].id,
+            toColumnId: overColumnId,
+            newOrder: newOrder,
+          });
+          
+          setPreviewWorkSpace(newWorkSpace);
+        }
       }
     }
-  }, [activeType, moveCard]);
+  }, [activeType, WorkSpace]);
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    restoreBodyScroll();
+    
+    if (!over || !WorkSpace) {
+      setActiveId(null);
+      setActiveType(null);
+      setDragInfo(null);
+      setPreviewWorkSpace(null);
+      return;
+    }
+
+    setLoading(true);
+
+    // Lógica para reordenar colunas
+    if (activeType === 'coluna' && over.id.toString().includes('coluna-')) {
+      const activeColumnId = parseInt(active.id.toString().replace('coluna-', ''));
+      const overColumnId = parseInt(over.id.toString().replace('coluna-', ''));
+      
+      if (activeColumnId !== overColumnId) {
+        const oldIndex = WorkSpace.colunas.findIndex((col) => col.id === activeColumnId);
+        const newIndex = WorkSpace.colunas.findIndex((col) => col.id === overColumnId);
+        
+        // Aplica a mudança otimisticamente
+        const reordered = arrayMove(WorkSpace.colunas, oldIndex, newIndex);
+        const updatedColumns = reordered.map((col, index) => ({
+          ...col,
+          order: index,
+        }));
+
+        setWorkSpace({
+          ...WorkSpace,
+          colunas: updatedColumns
+        });
+
+        if (id) {
+          const token = localStorage.getItem('token');
+          if (token) {
+            const value = moveColum(activeColumnId, newIndex);
+            value.then(res => {
+              if(typeof res === "boolean" && res) {
+                console.log("Coluna movida com sucesso");
+                setLoading(false);
+              } else {
+                // Em caso de erro, recarrega os dados
+                setUpdate(!update);
+                setLoading(false);
+              }
+            }).catch((error) => {
+              console.error("Erro ao mover coluna:", error);
+              // Em caso de erro, recarrega os dados
+              setUpdate(!update);
+              setLoading(false);
+            });
+          } else {
+            setLoading(false);
+          }
+        } else {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
+      }
+    }
+    
+    // Lógica para mover cards
+    if (activeType === 'card' && dragInfo) {
+      console.log("Fazendo chamada final da API com:", {
+        CardId: dragInfo.cardId,
+        ColunaId: dragInfo.toColumnId,
+        Order: dragInfo.newOrder + 1,
+      });
+      
+      // Aplica a mudança otimisticamente (já foi aplicada no preview)
+      if (previewWorkSpace) {
+        setWorkSpace(previewWorkSpace);
+      }
+      
+      moveCard({
+        CardId: dragInfo.cardId,
+        ColunaId: dragInfo.toColumnId,
+        Order: dragInfo.newOrder + 1,
+      }).then((response) => {
+        console.log("Card movido com sucesso:", response);
+        setLoading(false);
+      }).catch((error) => {
+        console.error("Erro ao mover card:", error);
+        // Em caso de erro, recarrega os dados para manter consistência
+        setUpdate(!update);
+        setLoading(false);
+      });
+    } else if (activeType === 'card') {
+      setLoading(false);
+    }
+    
+    // Limpa todos os estados
+    setActiveId(null);
+    setActiveType(null);
+    setDragInfo(null);
+    setPreviewWorkSpace(null);
+    
+    // Fallback para garantir que loading seja desabilitado
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+  }, [activeType, id, moveColum, moveCard, dragInfo, update, WorkSpace, previewWorkSpace]);
+
+  const handleDragCancel = useCallback(() => {
+    restoreBodyScroll();
+    setActiveId(null);
+    setActiveType(null);
+    setDragInfo(null);
+    setPreviewWorkSpace(null);
+    setLoading(false);
+  }, []);
 
   const getActiveItem = useCallback(() => {
-    if (!activeId || !activeType) return null;
+    if (!activeId || !activeType || !WorkSpace) return null;
+    
+    // Usa o preview se disponível, senão usa os dados originais
+    const dataSource = previewWorkSpace || WorkSpace;
     
     if (activeType === 'coluna') {
-      const coluna = colunas.find(col => col.id === parseInt(activeId));
+      const coluna = dataSource.colunas.find(col => col.id === parseInt(activeId));
       if (coluna) {
         return (
-          <div className="opacity-70 pointer-events-none">
+          <div className="opacity-70 pointer-events-none transform rotate-6 scale-105">
             <Coluna coluna={coluna} functionUptade={() => {setUpdate(!update)}} inforCard={showCardInfor} />
           </div>
         );
@@ -362,7 +437,7 @@ const WorkSpace = () => {
     } else if (activeType === 'card') {
       let activeCard: CardType | null = null;
       
-      colunas.forEach(coluna => {
+      dataSource.colunas.forEach(coluna => {
         const card = coluna.cards.find(c => c.id === parseInt(activeId));
         if (card) {
           activeCard = card;
@@ -371,7 +446,7 @@ const WorkSpace = () => {
       
       if (activeCard) {
         return (
-          <div className="opacity-70 pointer-events-none">
+          <div className="opacity-80 pointer-events-none transform rotate-12 scale-110 shadow-2xl">
             <Card card={activeCard} onClick={() => {}} />
           </div>
         );
@@ -379,10 +454,11 @@ const WorkSpace = () => {
     }
     
     return null;
-  }, [activeId, activeType, colunas, update]);
+  }, [activeId, activeType, WorkSpace, previewWorkSpace, update]);
 
-  const sortedColunas = [...colunas].sort((a, b) => a.order - b.order);
-  console.log(sortedColunas)
+  // Usa preview durante drag, senão usa dados originais
+  const displayWorkSpace = previewWorkSpace || WorkSpace;
+  const sortedColunas = displayWorkSpace ? [...displayWorkSpace.colunas].sort((a, b) => a.order - b.order) : [];
 
   const createColumnNew = () => {
     if(WorkSpace?.id) {
@@ -405,7 +481,7 @@ const WorkSpace = () => {
 
   return (
     <LayoutPage name={WorkSpace?.nome!} loadingValue={loading}>
-      <div className="p-6 bg-gray-100 h-[100%] min-w-[350px]">
+      <div className="p-6 bg-gray-100 h-[100%] min-w-[350px] select-none">
         <div className='max-xl:flex-col flex items-center justify-between mb-5'>
           <h2 className="max-xl:text-center text-[20px] break-words xl:text-2xl text-[#003057] font-bold xl:truncate w-[60%]">
             Área de Trabalho - {WorkSpace?.nome!}
@@ -424,6 +500,7 @@ const WorkSpace = () => {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
           onDragOver={handleDragOver}
+          onDragCancel={handleDragCancel}
         >
           <div className="flex gap-4 overflow-x-auto h-full max-h-[70vh] pb-4 elemento items-start">
             <SortableContext
@@ -441,7 +518,14 @@ const WorkSpace = () => {
             </SortableContext>
           </div>
           
-          <DragOverlay>{getActiveItem()}</DragOverlay>
+          <DragOverlay
+            dropAnimation={{
+              duration: 200,
+              easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+            }}
+          >
+            {getActiveItem()}
+          </DragOverlay>
         </DndContext>
       </div>
       {click && idCard?(
