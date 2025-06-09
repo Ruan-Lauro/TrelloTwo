@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { createConnection, getConnection, registerListener, waitForConnection } from '../services/websocket';
-import { useGetUser } from '../hooks/useGetUser';
 
 export interface Message {
   autor: string;
@@ -36,7 +35,7 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [groupMessages, setGroupMessages] = useState<GroupMessage | undefined>();
   const [privateGroupMessages, setPrivateGroupMessages] = useState<GroupMessage[]>([]);
   const token = localStorage.getItem("token"); 
-  
+
   useEffect(() => {
     if(token){
       console.log("Passando aquii")

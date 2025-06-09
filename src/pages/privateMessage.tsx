@@ -96,11 +96,11 @@ function PrivateMessages() {
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSend();
-        }
-    };
+    // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    //     if (e.key === 'Enter') {
+    //         handleSend();
+    //     }
+    // };
 
     return (
         <LayoutPage name="Mensagens Privadas" loadingValue={false} inforMessage={{id:chatPartner?.id!, nome:chatPartner?.nome!, type:'user'}}>

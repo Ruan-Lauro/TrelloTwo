@@ -129,7 +129,10 @@ export const Card: React.FC<CardProps> = ({ card, onClick }) => {
         ${isDragging ? 'z-50 cursor-grabbing' : 'z-0'}
         ${dragStarted ? '' : ''}
       `}
+      // @ts-ignore
+
       style={{
+        
         ...style,
         touchAction: 'none',
         WebkitTouchCallout: 'none',
