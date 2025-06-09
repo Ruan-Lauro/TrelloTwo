@@ -8,6 +8,7 @@ import { BiSolidPencil } from "react-icons/bi";
 import { useGetColumn } from '../hooks/useGetColunm';
 import { BsCheck, BsX } from 'react-icons/bs';
 import { useGetCard } from '../hooks/useGetCard';
+import { FaRegTrashAlt } from 'react-icons/fa';
 
 
 interface ColunaProps {
@@ -32,7 +33,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
     },
   });
 
-  const {editColum} = useGetColumn();
+  const {editColum, deleteColum} = useGetColumn();
   const [name, setName] = useState(coluna.nome);
   const [editName, setEditName] = useState(false);
   const {createCard} = useGetCard();
@@ -87,7 +88,7 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
         
           {editName?(
             <div className='flex items-center' >
-              <input type="text" className='border-b-[2px] border-1 focus:outline-0 font-bold xl:text-[24px] text-2 max-xl:w-[120px]' placeholder={name} onChange={handleName} />
+              <input type="text" className='border-b-[2px] border-1 focus:outline-0 font-bold xl:text-[24px] text-2 w-[70%] max-xl:w-[100px]' placeholder={name} onChange={handleName} />
               <BsCheck className="text-[20px] xl:text-[40px] text-1 cursor-pointer hover:text-8" onClick={()=>{
                   addNameColuna();
               }}  />
@@ -95,7 +96,15 @@ export const Coluna: React.FC<ColunaProps> = ({ coluna, functionUptade, inforCar
                   setName(coluna.nome);
                   setEditName(!editColum);
               }}/>
-            </div>
+              <FaRegTrashAlt className="text-[20px] text-1 cursor-pointer hover:text-red-500" onClick={()=>{
+                  const res = deleteColum(coluna.id);
+                  res.then(val=>{
+                      if(typeof val === "boolean" && val){
+                          functionUptade();
+                      }
+                  })
+              }} />
+</div>
           ):(
             <div className='flex items-center' >
               <h2 className="font-bold xl:text-[24px] text-2 truncate max-sm:max-w-[100px] max-w-[300px]">{name}</h2>

@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { createConnection, getConnection, registerListener, waitForConnection } from '../services/websocket';
+import { useGetUser } from '../hooks/useGetUser';
 
 export interface Message {
   autor: string;
@@ -34,14 +35,15 @@ export function ChatProvider({ children }: { children: ReactNode }) {
   const [privateMessages, setPrivateMessages] = useState<Message[]>([]);
   const [groupMessages, setGroupMessages] = useState<GroupMessage | undefined>();
   const [privateGroupMessages, setPrivateGroupMessages] = useState<GroupMessage[]>([]);
-
+  const token = localStorage.getItem("token"); 
+  
   useEffect(() => {
-    const token = localStorage.getItem("token"); 
     if(token){
+      console.log("Passando aquii")
       createConnection(token);
       initConnection();
     }
-  }, []);
+  }, [token]);
 
   const clearPrivateMessages = () => {
     setPrivateMessages([]);

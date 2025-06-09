@@ -28,7 +28,7 @@ export default function ShowWorkSpaceSelect ({listWorkSpace, workplaceIds, userI
     })
 
     return(
-        <div className="w-full z-2 flex flex-col px-5 py-2 bg-white border-[#C9C9C9] border-[1px] rounded-[8px] h-[100px] overflow-y-auto" >
+        <div className="w-full relative z-2 flex flex-col px-5 py-2 bg-white border-[#C9C9C9] border-[1px] rounded-[8px] h-[100px] overflow-y-auto" >
             {listWorkSpace.length > 0 && list.length > 0?(
                 <React.Fragment>
                     {list.map(value=>(
@@ -42,7 +42,7 @@ export default function ShowWorkSpaceSelect ({listWorkSpace, workplaceIds, userI
                                         }
                                     })
                                     
-                                }} className={`flex items-center justify-center mb-2 bg-green-600 w-[80px] h-[22px] rounded-[4px] px-1 cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-red-600`} >
+                                }} className={`flex items-center justify-center mb-2 bg-green-600 w-[150px] h-[22px] rounded-[4px] px-1 cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-red-600`} >
                                     <p className='truncate max-w-full text-white font-semibold' >{value.nome}</p>
                                 </div>
                             ):(
@@ -54,7 +54,7 @@ export default function ShowWorkSpaceSelect ({listWorkSpace, workplaceIds, userI
                                             update();
                                         }
                                     })
-                                }} className={`flex items-center justify-center mb-2 bg-red-600 w-[80px] h-[22px] rounded-[4px] px-1 cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-green-600`} >
+                                }} className={`flex items-center justify-center mb-2 bg-red-600 w-[150px] h-[22px] rounded-[4px] px-1 cursor-pointer hover:scale-105 transition-all duration-300 hover:bg-green-600`} >
                                     <p className='truncate max-w-full text-white font-semibold' >{value.nome}</p>
                                 </div>
                             )}

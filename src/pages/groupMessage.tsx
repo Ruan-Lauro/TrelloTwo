@@ -11,6 +11,8 @@ import ImgUser from '../components/imgUser';
 import LoadingLetter from '../components/loadingLetter';
 import EditGroup from '../components/editGroup';
 import { AiFillSetting } from "react-icons/ai";
+import MarkdownRenderer from '../components/markdown';
+
 
 function GroupMessages() {
 
@@ -124,6 +126,7 @@ function GroupMessages() {
             setGroupUsers(members);
             setIsAdmin(userData.role === 1);
         }
+        console.log("Aquiii")
        await getGroupMessages(parseInt(id));
        setIsLoading(false);
     };
@@ -139,11 +142,11 @@ function GroupMessages() {
         }
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            handleSend();
-        }
-    };
+    // const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    //     // if (e.key === 'Enter') {
+    //     //     handleSend();
+    //     // }
+    // };
 
     const handleAddUser = async (userId: number) => {
         if (!groupId) return;
@@ -196,7 +199,7 @@ function GroupMessages() {
                         )}
                     </div>
                     
-                    <div className="bg-white w-full 2xl:w-[1184px] h-[47vh] flex flex-col px-5 gap-3 rounded-[10px] overflow-y-auto pb-2">
+                    <div className="bg-white w-full  h-[47vh] flex flex-col px-5 gap-3 rounded-[10px] overflow-y-auto pb-2">
                         {isLoading?(
                             <LoadingLetter/>
                         ):(
@@ -211,7 +214,8 @@ function GroupMessages() {
                                                 <span className={` text-xs text-gray-500 truncate max-w-[200px] ${isCurrentUser ? "self-end mr-4 " : "ml-4"}`}>
                                                     {msg.autor}
                                                 </span>
-                                                <div className={` rounded-[10px] w-[200px] lg:w-[506px] p-2 relative before:content-[''] 
+                                                
+                                                <div className={`prose rounded-[10px] w-auto max-w-[200px] lg:max-w-[506px] p-2 relative before:content-[''] 
                                                     before:absolute before:top-0 
                                                     ${isCurrentUser 
                                                         ? "before:right-3 mr-2 bg-7 before:border-t-gray-200" 
@@ -219,7 +223,12 @@ function GroupMessages() {
                                                     before:translate-x-full before:border-[10px] before:border-transparent 
                                                     before:border-t-[10px]  mt-1`}
                                                 >
-                                                    <p className="break-words">{msg.conteudo}</p>
+                                                     <MarkdownRenderer 
+                                                        content={msg.conteudo} 
+                                                        theme={isCurrentUser ? 'light' : 'dark'}
+                                                        className="text-sm"
+                                                    />
+                                                    
                                                     <span className={`text-xs block text-right ${isCurrentUser?"text-gray-500":"text-white"}`}>
                                                         {new Date(msg.dataHora).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                                     </span>
@@ -240,10 +249,10 @@ function GroupMessages() {
                     {/* Message Input */}
                     <div className="w-full bg-white h-[90px] rounded-[10px] mt-10 mb-5 flex justify-center items-center gap-5">
                         <div className="flex items-center p-5 w-[98%] h-[60px] bg-gray-100 rounded-full">
-                            <input
+                            <textarea
                                 value={message}
                                 onChange={e => setMessage(e.target.value)}
-                                onKeyDown={handleKeyDown}
+                                // onKeyDown={handleKeyDown}
                                 placeholder="Digite sua mensagem"
                                 className="focus:outline-0 w-[85%] h-auto mr-5 break-words bg-transparent"
                             />

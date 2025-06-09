@@ -12,7 +12,7 @@ type listUser = {
 const ListUser = ({currentUser, isAdmin, list, handleRemoveUser}:listUser) => {
  
     return(
-        <div className="bg-white hidden lg:flex flex-col w-[313px] h-auto max-h-[50vh] rounded-[10px] ml-5 mr-5 px-5 py-5">
+        <div className="bg-white hidden xl:flex flex-col w-[313px] h-auto max-h-[50vh] rounded-[10px] ml-5 mr-5 px-5 py-5">
             <h2 className="text-2 font-bold text-[24px] mb-5">Membros do Grupo</h2>
             <div className="flex flex-col gap-4 h-[300px] overflow-y-auto pr-2">
                 {list.map((member) => (

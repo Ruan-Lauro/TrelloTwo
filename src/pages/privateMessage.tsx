@@ -6,6 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useGetUser, user, userGet } from "../hooks/useGetUser";
 import ImgUser from '../components/imgUser';
 import LoadingLetter from '../components/loadingLetter';
+import MarkdownRenderer from '../components/markdown';
 
 
 function PrivateMessages() {
@@ -141,7 +142,7 @@ function PrivateMessages() {
                                             <span className={`text-xs text-gray-500 ${isCurrentUser ? "text-right mr-4" : "ml-4"}`}>
                                                 {msg.autor}
                                             </span>
-                                            <div className={`rounded-[10px] w-[200px] lg:w-[506px] p-2 relative before:content-[''] 
+                                            <div className={`rounded-[10px] w-auto max-w-[200px] lg:max-w-[506px] p-2 relative before:content-[''] 
                                                 before:absolute before:top-0 
                                                 ${isCurrentUser 
                                                     ? "before:right-3 mr-2 bg-7 before:border-t-gray-200" 
@@ -149,7 +150,11 @@ function PrivateMessages() {
                                                 before:translate-x-full before:border-[10px] before:border-transparent 
                                                 before:border-t-[10px] mt-1`}
                                             >
-                                                <p className="break-words">{msg.conteudo}</p>
+                                                <MarkdownRenderer 
+                                                        content={msg.conteudo} 
+                                                        theme={isCurrentUser ? 'light' : 'dark'}
+                                                        className="text-sm"
+                                                    />
                                                 <span className={`text-xs block text-right ${isCurrentUser?"text-gray-500":"text-white"}`}>
                                                     {new Date(msg.dataHora).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                                 </span>
@@ -164,13 +169,12 @@ function PrivateMessages() {
                     
                     <div className="w-full bg-white h-[90px] rounded-[10px] mt-10 mb-5 flex justify-center items-center gap-5">
                         <div className="flex items-center p-5 w-[98%] h-[60px] bg-gray-100 rounded-full">
-                            <input
+                            <textarea
                                 value={message}
                                 onChange={e => setMessage(e.target.value)}
-                                onKeyDown={handleKeyDown}
+                                // onKeyDown={handleKeyDown}
                                 placeholder="Digite sua mensagem"
                                 className="focus:outline-0 w-[85%] h-auto mr-5 break-words bg-transparent"
-                                disabled={isLoading}
                             />
                             <ButtonAddUser type="button" authentication={handleSend}>Enviar</ButtonAddUser>
                         </div>
